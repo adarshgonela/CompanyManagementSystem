@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.adarsh.projectmanagementsystem.Dto.ProjectDetails;
+import com.adarsh.projectmanagementsystem.Repo.EmployeeRepo;
 import com.adarsh.projectmanagementsystem.Repo.ProjectDetailsRepo;
 
 @Repository
@@ -14,6 +15,9 @@ public class ProjectDetailsDao {
 
     @Autowired
     private ProjectDetailsRepo detailsRepo;
+
+    @Autowired
+    private EmployeeRepo employeeRepo;
 
     public ProjectDetails insert(ProjectDetails details)
     {

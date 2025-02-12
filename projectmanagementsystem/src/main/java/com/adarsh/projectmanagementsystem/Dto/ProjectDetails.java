@@ -1,9 +1,16 @@
 package com.adarsh.projectmanagementsystem.Dto;
 
+
+
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class ProjectDetails {
@@ -21,7 +28,11 @@ public class ProjectDetails {
     private String dependencies;
     private String projectClosure;
 
-    
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Employee> employee;
+
+
+
     public int getId() {
         return id;
     }
@@ -82,6 +93,18 @@ public class ProjectDetails {
     public void setProjectClosure(String projectClosure) {
         this.projectClosure = projectClosure;
     }
+    public List<Employee> getEmployee() {
+        return employee;
+    }
+    public void setEmployee(List<Employee> employee) {
+        this.employee = employee;
+    }
+    
+    
 
+    
+    
+
+    
     
 }
