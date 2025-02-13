@@ -1,11 +1,14 @@
 package com.adarsh.projectmanagementsystem.Dao;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.adarsh.projectmanagementsystem.Dto.Employee;
 import com.adarsh.projectmanagementsystem.Dto.ProjectDetails;
 import com.adarsh.projectmanagementsystem.Repo.EmployeeRepo;
 import com.adarsh.projectmanagementsystem.Repo.ProjectDetailsRepo;
@@ -21,6 +24,11 @@ public class ProjectDetailsDao {
 
     public ProjectDetails insert(ProjectDetails details)
     {
+        List<Employee> list=details.getEmployee();
+        for (Employee employee : list) {
+            employee.setHireDate(LocalDate.now());
+        }
+        details.setEmployee(list);
         return detailsRepo.save(details);
     }
 
