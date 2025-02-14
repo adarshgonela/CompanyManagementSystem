@@ -2,10 +2,12 @@ package com.adarsh.EmployeeManagementSystem.controller;
 
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 import com.adarsh.EmployeeManagementSystem.service.EmployeeService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -17,6 +19,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
+    }
+
+    @GetMapping("/all")
+     public List<Employee> getAllEmployee() {
+    return employeeService.getAllEmployee(); 
     }
 
     @PostMapping("/")

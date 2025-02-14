@@ -2,6 +2,9 @@ package com.adarsh.EmployeeManagementSystem.dao;
 
 import com.adarsh.EmployeeManagementSystem.Repo.EmployeeRepository;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +28,10 @@ public class EmployeeDao {
 
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
+    }
+
+    public List<Employee> getAllEmployee() {
+        return employeeRepository.findAll();
     }
 
 }

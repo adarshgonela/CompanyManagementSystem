@@ -1,2 +1,7 @@
-package com.adarsh.LeaveManagementSystem.dto;public enum LeaveRequestStatus {
-}
+// package com.adarsh.LeaveManagementSystem.dto;
+
+// public enum LeaveRequestStatus {
+//     PENDING,
+//     APPROVED,
+//     REJECTED
+// }

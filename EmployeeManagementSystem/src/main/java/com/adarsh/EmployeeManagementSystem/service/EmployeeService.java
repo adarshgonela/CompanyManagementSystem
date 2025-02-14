@@ -2,6 +2,9 @@ package com.adarsh.EmployeeManagementSystem.service;
 
 import com.adarsh.EmployeeManagementSystem.dao.EmployeeDao;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +31,9 @@ public class EmployeeService {
         dao.deleteEmployee(id);
     }
 
-
+ public List<Employee> getAllEmployee() {
+return dao.getAllEmployee(); 
+}
 
 
 }
