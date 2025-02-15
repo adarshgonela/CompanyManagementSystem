@@ -23,6 +23,6 @@ public class LeaveService {
     }
 
     public LeaveRequest updateleave(LeaveRequest leaverequest){
-        return dao.updateleave(leaverequest);
+        return dao.updateLeave(leaverequest);
     }
 }

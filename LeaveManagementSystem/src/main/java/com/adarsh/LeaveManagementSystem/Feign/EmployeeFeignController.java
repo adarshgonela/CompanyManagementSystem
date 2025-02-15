@@ -5,8 +5,13 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @FeignClient("EMPLOYEEMANAGEMENTSYSTEM")
 public interface EmployeeFeignController {
     @GetMapping("/api/employees/all")
     public List<Employee> getallemployees();
+
+    @GetMapping("/{id}")
+    public Optional<Employee> getEmployeeById(@PathVariable Long id);
 }

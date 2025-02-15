@@ -23,13 +23,22 @@ public class LeaveDao {
         return leaveRepo.findAll();
     }
 
-    public LeaveRequest updateleave(LeaveRequest leaverequest){
-        
-       Optional<LeaveRequest> optional= leaveRepo.findById(leaverequest.getLeaveRequestId());
+    public LeaveRequest updateLeave(LeaveRequest leaveRequest) {
+        Optional<LeaveRequest> optional = leaveRepo.findById(leaveRequest.getLeaveRequestId());
         if (optional.isPresent()) {
-            return leaveRepo.save(leaverequest);
+            // If the LeaveRequest exists, update it
+            LeaveRequest existingLeaveRequest = optional.get();
+            existingLeaveRequest.setLeaveType(leaveRequest.getLeaveType());  // Example of updating a field
+            existingLeaveRequest.setStartDate(leaveRequest.getStartDate());
+            existingLeaveRequest.setEndDate(leaveRequest.getEndDate());
+            // Add any other fields that need to be updated
+
+            return leaveRepo.save(existingLeaveRequest); // Save the updated leave request
+        } else {
+            // If the LeaveRequest doesn't exist, you might want to throw an exception or handle it
+            throw new RuntimeException("LeaveRequest not found with ID: " + leaveRequest.getLeaveRequestId());
         }
-        return leaveRepo.save(leaverequest);
     }
+
 
 }

@@ -4,6 +4,7 @@ import com.adarsh.EmployeeManagementSystem.dto.Employee;
 import com.adarsh.EmployeeManagementSystem.service.EmployeeService;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
+    public Optional<Employee> getEmployeeById(@PathVariable Long id) {
+      
         return employeeService.getEmployeeById(id);
     }
 
