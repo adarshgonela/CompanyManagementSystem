@@ -1,16 +1,11 @@
-package com.adarsh.EmployeeManagementSystem.dto;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.*;
-import lombok.Data;
+package com.adarsh.springjwt.clientResponses;
 
 import java.time.LocalDate;
 
-@Entity
+import lombok.Data;
 @Data
-public class Employee {
-    @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EmployeeResponse {
+    
     private Long id;
     private String firstName;
     private String lastName;

@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,7 +77,7 @@ public class AuthController {
 
 
 
-  @PostMapping("/signin")
+  @PostMapping("/signin")//login
 public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpSession session) {
 
     Authentication authentication = authenticationManager.authenticate(
@@ -125,7 +124,7 @@ public ResponseEntity<?> checkSession(HttpSession session) {
 
 
 
-  @PostMapping("/signup")
+  @PostMapping("/signup")//register
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity

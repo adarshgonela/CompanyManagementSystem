@@ -32,11 +32,21 @@ public class User {
   @Size(max = 120)
   private String password;
 
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  private Long empid;
+  
+
+  @PostPersist
+  public void assignId1() {
+      this.empid = this.id; // After the entity is saved, set id1 to the value of id
+  }
+
 
   public User() {
   }
@@ -85,5 +95,15 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+
+  public Long getEmpid() {
+    return empid;
+  }
+
+
+  public void setEmpid(Long empid) {
+    this.empid = empid;
   }
 }

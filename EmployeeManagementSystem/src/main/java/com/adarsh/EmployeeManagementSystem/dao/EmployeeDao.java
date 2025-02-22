@@ -1,6 +1,5 @@
 package com.adarsh.EmployeeManagementSystem.dao;
 
-import com.adarsh.EmployeeManagementSystem.Exceptions.EmployeeFound;
 import com.adarsh.EmployeeManagementSystem.Repo.EmployeeRepository;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 
@@ -21,12 +20,7 @@ public class EmployeeDao {
     }
 
     public Employee createEmployee(Employee employee) {
-        Employee existingEmployee  = employeeRepository.findByEmail(employee.getEmail());
-        if (existingEmployee != null) {
-            // If an employee exists, throw an exception
-            throw new EmployeeFound("Employee with email " + employee.getEmail() + " already exists.");
-        }
-        // If no existing employee, save the new employee
+        
         return employeeRepository.save(employee);
     }
 
