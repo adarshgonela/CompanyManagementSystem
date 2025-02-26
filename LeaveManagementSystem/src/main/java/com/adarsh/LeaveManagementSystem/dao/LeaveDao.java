@@ -39,6 +39,9 @@ public class LeaveDao {
             throw new RuntimeException("LeaveRequest not found with ID: " + leaveRequest.getLeaveRequestId());
         }
     }
+  public  List<LeaveRequest> findByEmployee(Long employeeId){
+        return  leaveRepo.findByEmployee(employeeId);
+  }
 
 
 }

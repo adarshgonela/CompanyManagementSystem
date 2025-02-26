@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Mirrored from dleohr.dreamstechnologies.com/template-1/dleohr-vertical/employees-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Dec 2024 03:18:04 GMT -->
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/img/favicon.png"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../../assets/css/bootstrap.min.css" />
+
+    <!-- Linearicon Font -->
+    <link rel="stylesheet" href="../../../assets/css/lnr-icon.css" />
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="../../../assets/css/font-awesome.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../../assets/css/style.css" />
+
+    <title>index Page</title>
+  </head>
+  <body>
+    <!-- Inner wrapper -->
+    <div class="inner-wrapper">
+      <app-navbar></app-navbar>
+
+      <!-- Content -->
+      <div class="page-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-12 theiaStickySidebar">
+              <aside class="sidebar sidebar-user">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card ctm-border-radius shadow-sm grow">
+                      <div class="card-body py-4">
+                        <div class="row">
+                          <div class="col-md-12 mr-auto text-left">
+                            <div class="custom-search input-group">
+                              <div class="custom-breadcrumb">
+                                <ol
+                                  class="breadcrumb no-bg-color d-inline-block p-0 m-0 mb-2"
+                                >
+                                  <li class="breadcrumb-item d-inline-block">
+                                    <a href="index.html" class="text-dark"
+                                      >Home</a
+                                    >
+                                  </li>
+                                  <li
+                                    class="breadcrumb-item d-inline-block active"
+                                  >
+                                    Dashboard
+                                  </li>
+                                </ol>
+                                <h4 class="text-dark">Employees Dashboard</h4>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="user-card card shadow-sm bg-white text-center ctm-border-radius grow"
+                >
+                  <div class="user-info card-body">
+                    <div class="user-avatar mb-4">
+                      <img
+                        src="assets/img/profiles/img-6.jpg"
+                        alt="User Avatar"
+                        class="img-fluid rounded-circle"
+                        width="100"
+                      />
+                    </div>
+                    <div class="user-details">
+                      <h4><b>Welcome Maria</b></h4>
+                      <p>Sun, 29 Nov 2019</p>
+                    </div>
+                  </div>
+                </div>
+
+                <app-sidebar></app-sidebar>
+              </aside>
+            </div>
+
+            <!-- <div class="col-xl-9 col-lg-8 col-md-12"> -->
+              <!-- main -->
+            <!-- </div> -->
+
+            <div class="col-xl-9 col-lg-8 col-md-12">
+							
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card ctm-border-radius shadow-sm grow">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Apply Leaves</h4>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>
+                                                Leave Type
+                                                <span class="text-danger">*</span>
+                                                </label>
+                                                <select class="form-control select">
+                                                    <option>Select Leave</option>
+                                                    <option>Working From Home</option>
+                                                    <option>Sick Leave</option>
+                                                    <option>Parental Leave</option>
+                                                    <option>Annual Leave</option>
+                                                    <option>Normal Leave</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 leave-col">
+                                            <div class="form-group">
+                                                <label>Remaining Leaves</label>
+                                                <input type="text" class="form-control" placeholder="10" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>From</label>
+                                                <input type="text" class="form-control datetimepicker">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 leave-col">
+                                            <div class="form-group">
+                                                <label>To</label>
+                                                <input type="text" class="form-control datetimepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>
+                                                Half Day
+                                                <span class="text-danger">*</span>
+                                                </label>
+                                                <select class="form-control select">
+                                                    <option>Select</option>
+                                                    <option>First Half</option>
+                                                    <option>Second Half</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 leave-col">
+                                            <div class="form-group">
+                                                <label>Number of Days Leave</label>
+                                                <input type="text" class="form-control" placeholder="2" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group mb-0">
+                                                <label>Reason</label>
+                                                <textarea class="form-control" rows=4></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="javascript:void(0);" class="btn btn-theme button-1 text-white ctm-border-radius mt-4">Apply</a>
+                                        <a href="javascript:void(0);" class="btn btn-danger text-white ctm-border-radius mt-4">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card ctm-border-radius shadow-sm grow">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Leave Details</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="employee-office-table">
+                                    <div class="table-responsive">
+                                        <table class="table custom-table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Total Employees</th>
+                                                    <th>First Half</th>
+                                                    <th>Second Half</th>
+                                                    <th>Working From Home</th>
+                                                    <th>Absent</th>
+                                                    <th>Today Aways</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>05 May 2019</td>
+                                                    <td>7</td>
+                                                    <td>6</td>
+                                                    <td>6</td>
+                                                    <td>1</td>
+                                                    <td>0</td>
+                                                    <td>1</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card ctm-border-radius shadow-sm grow">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Today Leaves</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="employee-office-table">
+                                    <div class="table-responsive">
+                                        <table class="table custom-table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Employee</th>
+                                                    <th>Leave Type</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>Days</th>
+                                                    <th>Remaining Days</th>
+                                                    <th>Notes</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <a href="employment.html" class="avatar"><img alt="avatar image" src="assets/img/profiles/img-5.jpg" class="img-fluid"></a>
+                                                        <h2><a href="employment.html">Danny Ward</a></h2>
+                                                    </td>
+                                                    <td>Parental Leave</td>
+                                                    <td>05 Dec 2019</td>
+                                                    <td>07 Dec 2019</td>
+                                                    <td>3</td>
+                                                    <td>9</td>
+                                                    <td>Parenting Leave</td>
+                                                    <td><a href="javascript:void(0)" class="btn btn-theme ctm-border-radius text-white btn-sm">Approved</a></td>
+                                                    <td class="text-right text-danger"><a href="javascript:void(0);" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#delete">
+                                                        <span class="lnr lnr-trash"></span> Delete
+                                                    </a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="employment.html" class="avatar"><img src="assets/img/profiles/img-4.jpg" alt="Linda Craver" class="img-fluid"></a>
+                                                        <h2><a href="employment.html">Linda Craver</a></h2>
+                                                    </td>
+                                                    <td>Sick Leave</td>
+                                                    <td>05 Dec 2019</td>
+                                                    <td>05 Dec 2019</td>
+                                                    <td>1</td>
+                                                    <td>11</td>
+                                                    <td>Going to Hospital</td>
+                                                    <td><a href="javascript:void(0)" class="btn btn-theme ctm-border-radius text-white btn-sm">Approved</a></td>
+                                                    <td class="text-right text-danger"><a href="javascript:void(0);" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#delete">
+                                                        <span class="lnr lnr-trash"></span> Delete
+                                                    </a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="employment.html" class="avatar"><img src="assets/img/profiles/img-3.jpg" alt="Jenni Sims" class="img-fluid"></a>
+                                                        <h2><a href="employment.html">Jenni Sims</a></h2>
+                                                    </td>
+                                                    <td>Working From Home</td>
+                                                    <td>05 Dec 2019</td>
+                                                    <td>05 Dec 2019</td>
+                                                    <td>1</td>
+                                                    <td>11</td>
+                                                    <td>Raining</td>
+                                                    <td><a href="javascript:void(0)" class="btn btn-theme ctm-border-radius text-white btn-sm">Approved</a></td>
+                                                    <td class="text-right text-danger"><a href="javascript:void(0);" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#delete">
+                                                        <span class="lnr lnr-trash"></span> Delete
+                                                    </a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/Content-->
+    </div>
+    <!-- Inner Wrapper -->
+
+    <div class="sidebar-overlay" id="sidebar_overlay"></div>
+
+    <!-- jQuery -->
+    <script
+      src="../../../../assets/js/jquery-3.2.1.min.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+
+    <!-- Bootstrap Core JS -->
+    <script
+      src="../../../../assets/js/popper.min.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+    <script
+      src="../../../../assets/js/bootstrap.min.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+
+    <!-- Sticky sidebar JS -->
+    <script
+      src="../../../../assets/plugins/theia-sticky-sidebar/ResizeSensor.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+    <script
+      src="../../../../assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+
+    <!-- Custom Js -->
+    <script
+      src="../../../../assets/js/script.js"
+      type="619642e8067b2605b6e0feac-text/javascript"
+    ></script>
+
+    <script
+      src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
+      data-cf-settings="619642e8067b2605b6e0feac-|49"
+      defer
+    ></script>
+  </body>
+</html>
