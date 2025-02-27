@@ -4,6 +4,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { SidebarComponent } from './common/sidebar/sidebar.component';
 import { LeaveformComponent } from './employee/leaveform/leaveform.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,12 @@ export const routes: Routes = [
     {
         path:'leaveform',
         component:LeaveformComponent
+    },
+    {
+        path:'test/:employeeId',component:TestComponent
+    },
+    {
+        path:'test',component:TestComponent
     }
     
     // { path: 'leave/:employeeId', component: LeaveformComponent }

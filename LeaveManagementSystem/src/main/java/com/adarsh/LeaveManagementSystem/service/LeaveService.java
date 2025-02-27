@@ -26,7 +26,7 @@ public class LeaveService {
         return dao.updateLeave(leaverequest);
     }
 
-    public  List<LeaveRequest> findByEmployee(Long employeeId){
+    public  Optional<LeaveRequest> findByEmployee(Long employeeId){
         return  dao.findByEmployee(employeeId);
     }
 }

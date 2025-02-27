@@ -1,0 +1,2 @@
+1.HttpClient issue --> provideHttpClient() in app.comfig.ts
+2. ngfor -->   imports: [CommonModule],

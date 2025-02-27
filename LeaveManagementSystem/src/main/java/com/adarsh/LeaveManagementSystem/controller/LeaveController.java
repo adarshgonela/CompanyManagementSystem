@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/leave")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LeaveController {
 
     @Autowired
@@ -65,8 +66,8 @@ public class LeaveController {
     }
 
 
-    @GetMapping("/{employeeId}")
-    public  List<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
+    @GetMapping("/employee/{employeeId}")
+    public  Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
         return  service.findByEmployee(employeeId);
     }
 
