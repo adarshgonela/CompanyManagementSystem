@@ -5,6 +5,7 @@ import {  LeaveserviceService } from '../../service/leaveService/leaveservice.se
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { LeaveRequest } from '../../dto/leaverequest';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-leaveform',
@@ -14,23 +15,49 @@ import { LeaveRequest } from '../../dto/leaverequest';
   styleUrl: './leaveform.component.css'
 })
 export class LeaveformComponent implements OnInit {
+ 
   leaveRequests: LeaveRequest[] = [];
-  employeeId: number = 1; // Replace with the actual employee ID or get it dynamically
-
-  constructor(private leaveService: LeaveserviceService) {}
-
-  ngOnInit(): void {
-    this.loadLeaveRequests();
-  }
-
-  loadLeaveRequests(): void {
-    this.leaveService.getLeaveRequestsByEmployee(this.employeeId).subscribe(
-      (data: LeaveRequest[]) => {
-        this.leaveRequests = data;
-      },
-      (error: HttpErrorResponse) => {
-        console.error('Error fetching leave requests', error);
-      }
-    );
-  }
+   
+  
+    employeeId: number | undefined; 
+  
+    constructor(private leaveService: LeaveserviceService , private route : ActivatedRoute) {}
+  
+    // ngOnInit(): void {
+    //   this.loadLeaveRequests(this.employeeId);
+    //   // this.getAllleavescomponent();
+    // }
+  
+  
+  
+    ngOnInit(): void {
+      // Get the employeeId from the route parameters
+      this.route.params.subscribe((params) => {
+        this.employeeId = +params['employeeId'];  // Convert to number
+        this.loadLeaveRequests(this.employeeId);
+      });
+    }
+  
+  
+  
+  
+    loadLeaveRequests(employeeId: number): void {//getleaves by id
+      this.leaveService.getLeaveRequestsByEmployee(employeeId).subscribe({
+        next: (data: any) => {
+          this.leaveRequests = Array.isArray(data) ? data : []; // Ensure data is an array
+        },
+        error: (error: any) => {
+          console.error('Error fetching leave requests:', error);
+        },
+      });
+    }
+    
+  
+  
+    getAllleavescomponent(): void { // getall leaves
+      this.leaveService.getAllleaves().subscribe(
+        (data: any) => {this.leaveRequests = data}
+      );
+    }
+  
 }

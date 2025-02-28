@@ -13,7 +13,7 @@ export class LeaveserviceService {
   constructor(private http: HttpClient) {}
 
   getLeaveRequestsByEmployee(employeeId: number):any {
-    return this.http.get(`${this.apiUrl}/employee/${employeeId}`);
+    return this.http.get(`${this.apiUrl}/leaveid/${employeeId}`);
   }
 
 

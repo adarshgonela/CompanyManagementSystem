@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface LeaveRepo extends JpaRepository<LeaveRequest,Long> {
 
-    @Query(value = "SELECT * FROM leave_table WHERE employee = :employeeId", nativeQuery = true)
-    Optional<LeaveRequest> findByEmployee(Long employeeId);
+    @Query(value = "SELECT * FROM leave_table WHERE leave_request_id = :employeeId", nativeQuery = true)
+    List<LeaveRequest> findByEmployee(Long employeeId);
 
 }

@@ -1,6 +1,8 @@
 <div>
     <h2>Leave Requests</h2>
-    @if (leaveRequests.length > 0) {
+    <!-- @if (leaveRequests.length > 0) { -->
+    @if (true) {
+
       @for (request of leaveRequests; track request.leaveRequestId) {
         <div>
           <h3>Leave Request ID: {{ request.leaveRequestId }}</h3>

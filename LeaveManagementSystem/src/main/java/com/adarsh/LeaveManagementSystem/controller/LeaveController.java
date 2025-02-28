@@ -66,8 +66,8 @@ public class LeaveController {
     }
 
 
-    @GetMapping("/employee/{employeeId}")
-    public  Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
+    @GetMapping("/leaveid/{employeeId}")
+    public  List<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
         return  service.findByEmployee(employeeId);
     }
 
