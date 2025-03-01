@@ -1,30 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../common/header/header.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HeaderComponent],
+  imports: [ReactiveFormsModule, ReactiveFormsModule, CommonModule, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent  {
 
-  loginForm!: FormGroup;
+  loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onSubmit(): void {
+  onSubmit() {
     if (this.loginForm.valid) {
-      // Handle form submission, send data to server
-      console.log('Form Submitted:', this.loginForm.value);
+      console.log('Form Submitted', this.loginForm.value);
+      // Add your login logic here (e.g., call an API)
+    } else {
+      console.log('Form is invalid');
     }
   }
 }
