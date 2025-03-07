@@ -22,8 +22,8 @@ public class LeaveRequest {
     private Long employee;
 
     @Column(name = "leave_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private LeaveType leaveType;
+//    @Enumerated(EnumType.STRING)
+    private String leaveType;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -57,7 +57,6 @@ public class LeaveRequest {
 
     // Getters and setters
 
-
     public Long getLeaveRequestId() {
         return leaveRequestId;
     }
@@ -74,11 +73,11 @@ public class LeaveRequest {
         this.employee = employee;
     }
 
-    public LeaveType getLeaveType() {
+    public String getLeaveType() {
         return leaveType;
     }
 
-    public void setLeaveType(LeaveType leaveType) {
+    public void setLeaveType(String leaveType) {
         this.leaveType = leaveType;
     }
 

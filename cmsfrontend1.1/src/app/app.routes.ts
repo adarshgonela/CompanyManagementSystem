@@ -37,7 +37,8 @@ export const routes: Routes = [
     },
     {
         path:'test',component:TestComponent
-    }
-    
+    },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '**', redirectTo: '/login' },
     // { path: 'leave/:employeeId', component: LeaveformComponent }
 ];

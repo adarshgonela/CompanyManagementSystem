@@ -92,6 +92,8 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
 
+        System.out.println("login doneeee");
+
     // Store user details in session
     session.setAttribute("userId", userDetails.getId());
     session.setAttribute("username", userDetails.getUsername());
@@ -102,6 +104,7 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
                          userDetails.getUsername(), 
                          userDetails.getEmail(), 
                          roles));
+
 }
 
 

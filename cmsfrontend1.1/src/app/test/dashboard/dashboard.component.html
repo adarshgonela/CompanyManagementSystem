@@ -1,0 +1,12 @@
+@if (user(); as user) {
+  <div>
+    <h1>Welcome to the Dashboard, {{ user.username }}!</h1>
+    <p>ID: {{ user.id }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Roles: {{ user.roles.join(', ') }}</p>
+    <p>Token Type: {{ user.tokenType }}</p>
+    <p>Access Token: {{ user.accessToken }}</p>
+  </div>
+}
+
+<button (click)="logout()">Logout</button>
