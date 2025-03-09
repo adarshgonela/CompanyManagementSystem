@@ -5,8 +5,6 @@
  import jakarta.persistence.GenerationType;
  import jakarta.persistence.Id;
  import lombok.Data;
- import org.antlr.v4.runtime.misc.NotNull;
- import org.springframework.beans.factory.annotation.Value;
 
  @Entity
  @Data
@@ -23,7 +21,6 @@
      private int personalCount;
 
      private int unpaidCount;
-     @NotNull
      private Long empid;
 
 //     private Long empid;

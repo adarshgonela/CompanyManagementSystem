@@ -13,6 +13,7 @@ public class LeaveTypeController {
 
     @Autowired
     private LeaveTypeService leaveTypeService;
+
     @PostMapping
     public LeaveType createLeaveType(@RequestBody LeaveType leaveType) {
         return leaveTypeService.saveleavetypeservice(leaveType);

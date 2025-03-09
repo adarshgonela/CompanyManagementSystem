@@ -1,6 +1,4 @@
 package com.adarsh.LeaveManagementSystem.dto;
-
-import com.adarsh.LeaveManagementSystem.refDto.Employee;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,7 +19,9 @@ public class LeaveRequest {
     @JoinColumn(name = "employee_id", nullable = false)
     private Long employee;
 
-    @Column(name = "leave_type", nullable = false)
+    @Column(name = "leave_type"
+    // , nullable = false
+    )
 //    @Enumerated(EnumType.STRING)
     private String leaveType;
 

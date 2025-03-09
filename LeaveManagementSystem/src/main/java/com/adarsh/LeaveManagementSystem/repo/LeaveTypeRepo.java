@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LeaveTypeRepo extends JpaRepository<LeaveType,Integer> {
-    LeaveType save(LeaveType leaveType, Long empid);
+    // LeaveType saveleavetype(LeaveType leaveType);
 }
