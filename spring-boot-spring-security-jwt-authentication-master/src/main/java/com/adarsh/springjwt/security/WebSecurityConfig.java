@@ -81,6 +81,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 //    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 //  }
   
+  @SuppressWarnings("removal")
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors().and().csrf(csrf -> csrf.disable())
@@ -88,8 +89,12 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> 
           auth.requestMatchers("/api/auth/**").permitAll()
+          .requestMatchers("/ems/**").permitAll()
+          .requestMatchers("/api/test/**").permitAll()
+
+
 //              .requestMatchers("/api/test/**").permitAll()
-                  .requestMatchers("http://localhost:8765/VIJAYALAKSHMISAREESSPRINGBOOT/sarees/*").permitAll()
+                  // .requestMatchers("http://localhost:8765/VIJAYALAKSHMISAREESSPRINGBOOT/sarees/*").permitAll()
 
               .anyRequest().authenticated()
         );

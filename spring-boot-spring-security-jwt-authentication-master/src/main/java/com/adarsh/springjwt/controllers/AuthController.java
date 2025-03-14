@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.adarsh.springjwt.clientResponses.EmsDtoClient;
 import com.adarsh.springjwt.clients.Ems_lms_client;
-import com.adarsh.springjwt.clients.ems_lms_client;
 import com.adarsh.springjwt.models.ERole;
 import com.adarsh.springjwt.models.Role;
 import com.adarsh.springjwt.models.User;

@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 @CrossOrigin(origins = "*")
 @RestController
-// @RequestMapping("/auth")
+@RequestMapping("/ems")
 @Transactional
 @Async
 public class Ems_lms_client {
@@ -32,4 +32,8 @@ public class Ems_lms_client {
         return response;
     }
     
+    @GetMapping("/name")
+    private String nema(){
+        return " i am adarsh";
+    }
 }
