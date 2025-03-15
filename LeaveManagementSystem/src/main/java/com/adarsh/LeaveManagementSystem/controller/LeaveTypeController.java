@@ -18,7 +18,7 @@ public class LeaveTypeController {
     @Autowired
 private LeaveConfig leaveConfig;
 
-    @PostMapping
+    @PostMapping("/save")
     public LeaveType createLeaveType(@RequestBody LeaveType leaveType) {
      
     leaveType.setVacationCount(leaveConfig.getVacationCount());

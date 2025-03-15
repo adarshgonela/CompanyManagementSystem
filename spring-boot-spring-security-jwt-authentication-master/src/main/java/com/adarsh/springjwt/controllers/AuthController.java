@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adarsh.springjwt.clientResponses.EmsDtoClient;
+import com.adarsh.springjwt.clientResponses.LeaveDtoClient;
+import com.adarsh.springjwt.clientResponses.Leavetypedtoclient;
 import com.adarsh.springjwt.clients.Ems_lms_client;
 import com.adarsh.springjwt.models.ERole;
 import com.adarsh.springjwt.models.Role;
@@ -246,9 +248,11 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
     EmsDtoClient emsDtoClient = new EmsDtoClient();
     emsDtoClient.setId(user.getId()); // Assuming user.getId() returns the user ID
     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
-
-    if (response.getStatusCode().is2xxSuccessful()) {
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+Leavetypedtoclient l=new Leavetypedtoclient();
+l.setEmpid(user.getId());
+ResponseEntity<String> response1 =ems_lms_client.createleaverowafterregister(l);
+    if (response.getStatusCode().is2xxSuccessful() && response1.getStatusCode().is2xxSuccessful()) {
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!  and employee can enter remaining data now"));
     } else {
         // Handle the case where saving to the other table failed
         return ResponseEntity
