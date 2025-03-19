@@ -1,0 +1,19 @@
+signup -->  
+{
+  "username": "user6",
+  "email": "user6@gmail.com",
+  "password": "11111111",
+  "roles": [
+    {
+      "id": 3
+    }
+  ]
+}
+
+login -->
+{
+    "username":"user1",
+    "password":"11111111"
+}
+
+

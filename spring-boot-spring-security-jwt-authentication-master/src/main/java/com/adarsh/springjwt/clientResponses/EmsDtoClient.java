@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class EmsDtoClient {
     private Long id;
+    private Long empid;
+
     private String firstName;
     private String lastName;
     // private String email;
@@ -52,6 +54,12 @@ public class EmsDtoClient {
     }
     public void setHireDate(LocalDate hireDate) {
         this.hireDate = hireDate;
+    }
+    public Long getEmpid() {
+        return empid;
+    }
+    public void setEmpid(Long empid) {
+        this.empid = empid;
     }
 
 

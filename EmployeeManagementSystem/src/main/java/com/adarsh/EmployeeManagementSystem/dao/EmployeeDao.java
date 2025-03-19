@@ -1,5 +1,6 @@
 package com.adarsh.EmployeeManagementSystem.dao;
 
+import com.adarsh.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 import com.adarsh.EmployeeManagementSystem.Repo.EmployeeRepository;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 
@@ -24,8 +25,19 @@ public class EmployeeDao {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee updateEmployee(Employee employee,Long empid) {
+        
+        Employee existingEmployee= employeeRepository.findById(empid)
+        .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + empid));
+       
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setPhone(employee.getPhone());
+        existingEmployee.setDepartment(employee.getDepartment());
+        existingEmployee.setPosition(employee.getPosition());
+        existingEmployee.setHireDate(employee.getHireDate());
+
+        return employeeRepository.save(existingEmployee);
     }
 
     public void deleteEmployee(Long id) {

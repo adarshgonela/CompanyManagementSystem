@@ -26,8 +26,8 @@ public class EmployeeService {
         return dao.createEmployee(employee);
     }
 
-    public Employee updateEmployee( Employee employee) {
-        return dao.updateEmployee(employee);
+    public Employee updateEmployee( Employee employee,Long empid) {
+        return dao.updateEmployee(employee,empid);
     }
     public void deleteEmployee(Long id) {
         dao.deleteEmployee(id);

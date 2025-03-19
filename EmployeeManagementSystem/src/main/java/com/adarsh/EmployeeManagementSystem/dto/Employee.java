@@ -10,8 +10,9 @@ import java.time.LocalDate;
 @Data
 public class Employee {
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long empid;
     private String firstName;
     private String lastName;
     // private String email;
@@ -20,4 +21,5 @@ public class Employee {
     private String position;
     private LocalDate hireDate;
     // private String roletype;//employee/hr/manager
+    
 }

@@ -19,11 +19,9 @@ public class LeaveRequest {
     @JoinColumn(name = "employee_id", nullable = false)
     private Long employee;
 
-    @Column(name = "leave_type"
-    // , nullable = false
-    )
-//    @Enumerated(EnumType.STRING)
-    private String leaveType;
+    @OneToOne
+    // (cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "leaveRequest")
+    private LeaveType  leaveType;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -55,102 +53,4 @@ public class LeaveRequest {
     @Column(name = "approval_status")
     private ApprovalStatus approvalStatus;  // Approval status (e.g., 'Manager Approved', 'HR Approved')
 
-    // Getters and setters
-
-    public Long getLeaveRequestId() {
-        return leaveRequestId;
-    }
-
-    public void setLeaveRequestId(Long leaveRequestId) {
-        this.leaveRequestId = leaveRequestId;
-    }
-
-    public Long getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Long employee) {
-        this.employee = employee;
-    }
-
-    public String getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public Double getNumberOfDays() {
-        return numberOfDays;
-    }
-
-    public void setNumberOfDays(Double numberOfDays) {
-        this.numberOfDays = numberOfDays;
-    }
-
-    public LeaveRequestStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(LeaveRequestStatus status) {
-        this.status = status;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDateTime getRequestedAt() {
-        return requestedAt;
-    }
-
-    public void setRequestedAt(LocalDateTime requestedAt) {
-        this.requestedAt = requestedAt;
-    }
-
-    public LocalDateTime getApprovedAt() {
-        return approvedAt;
-    }
-
-    public void setApprovedAt(LocalDateTime approvedAt) {
-        this.approvedAt = approvedAt;
-    }
-
-    public LocalDateTime getRejectedAt() {
-        return rejectedAt;
-    }
-
-    public void setRejectedAt(LocalDateTime rejectedAt) {
-        this.rejectedAt = rejectedAt;
-    }
-
-    public ApprovalStatus getApprovalStatus() {
-        return approvalStatus;
-    }
-
-    public void setApprovalStatus(ApprovalStatus approvalStatus) {
-        this.approvalStatus = approvalStatus;
-    }
-}
-
+   }

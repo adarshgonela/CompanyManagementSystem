@@ -246,7 +246,7 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
 
     // Save the user ID in another table using Ems_lms_client
     EmsDtoClient emsDtoClient = new EmsDtoClient();
-    emsDtoClient.setId(user.getId()); // Assuming user.getId() returns the user ID
+    emsDtoClient.setEmpid(user.getId()); // Assuming user.getId() returns the user ID
     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
 Leavetypedtoclient l=new Leavetypedtoclient();
 l.setEmpid(user.getId());
