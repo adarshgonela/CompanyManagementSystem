@@ -22,6 +22,11 @@ public class EmployeeController {
       
         return employeeService.getEmployeeById(id);
     }
+    @PostMapping("/{id}")
+    public Optional<Employee> getEmployeeByIdpost(@PathVariable Long id) {
+      
+        return employeeService.getEmployeeById(id);
+    }
 
     @GetMapping("/all")
      public List<Employee> getAllEmployee() {

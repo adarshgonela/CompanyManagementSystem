@@ -16,11 +16,11 @@ public class LeaveRequest {
     private Long leaveRequestId;
 
 //    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Long employee;
+    @JoinColumn(//name = "employee_id", 
+    nullable = false)
+    private Long employeeid;
 
-    @OneToOne
-    // (cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "leaveRequest")
+    @OneToOne(cascade = CascadeType.MERGE)
     private LeaveType  leaveType;
 
     @Column(name = "start_date", nullable = false)

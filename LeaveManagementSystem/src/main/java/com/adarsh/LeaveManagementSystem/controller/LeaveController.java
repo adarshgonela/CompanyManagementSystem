@@ -27,25 +27,10 @@ public class LeaveController {
 
     @PostMapping("/save")
     public LeaveRequest requestleaveOrsaveleave(@RequestBody LeaveRequest leaverequest) {
-        try {
-            // Check if employee exists using the employeeFeignController
-            Optional<Employee> optional = employeeFeignController.getEmployeeById(leaverequest.getEmployee());
-
-            if (optional.isPresent()) {
-                // Employee exists, process leave request or save leave
-                return service.requestleaveOrsaveleave(leaverequest);
-            } else {
-                // Employee not found, throw exception
-                throw new RuntimeException("Employee not found with ID: " + leaverequest.getEmployee());
-            }
-
-        } catch (InvalidLeaveRequestException ex) {
-            // Handle invalid leave request exceptions
-            throw new InvalidLeaveRequestException("Invalid leave request: " + ex.getMessage());
-        } catch (Exception ex) {
-            // Handle other exceptions
-            throw new RuntimeException("An error occurred while processing the leave request: " + ex.getMessage());
-        }
+           Optional<Employee> optional= employeeFeignController.getEmployeeByIdpost(leaverequest.getEmployeeid());
+           
+        return service.requestleaveOrsaveleave(leaverequest);
+           
     }
 
 

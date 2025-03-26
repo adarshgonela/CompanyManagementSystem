@@ -12,6 +12,6 @@ public interface EmployeeFeignController {
     @GetMapping("/api/employees/all")
     public List<Employee> getallemployees();
 
-    @GetMapping("/{id}")
-    public Optional<Employee> getEmployeeById(@PathVariable Long id);
+    @PostMapping("api/employees/{id}")
+    public Optional<Employee> getEmployeeByIdpost(@PathVariable Long id);
 }
