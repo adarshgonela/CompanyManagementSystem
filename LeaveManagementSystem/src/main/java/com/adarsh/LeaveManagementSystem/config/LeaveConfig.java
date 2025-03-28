@@ -19,8 +19,8 @@ public class LeaveConfig {
     @Value("${leave.personalCount}")
     private int personalCount;
 
-    @Value("${leave.unpaidCount}")
-    private int unpaidCount;
+    @Value("${leave.paidCount}")
+    private int paidCount;
 
     // Getters for the leave counts
     public int getVacationCount() {
@@ -39,7 +39,11 @@ public class LeaveConfig {
         return personalCount;
     }
 
-    public int getUnpaidCount() {
-        return unpaidCount;
+    public int getPaidCount() {
+        return paidCount;
+    }
+
+    public void setPaidCount(int paidCount) {
+        this.paidCount = paidCount;
     }
 }

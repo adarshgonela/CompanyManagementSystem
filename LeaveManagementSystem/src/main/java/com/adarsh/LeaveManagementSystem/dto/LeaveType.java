@@ -20,7 +20,7 @@ public class LeaveType {
 
     private int personalCount;
 
-    private int unpaidCount;
+    private int paidCount;
     private Long empid;
 
     // private Long empid;
@@ -40,12 +40,8 @@ public class LeaveType {
     // @Value("${leave.unpaidCount}")
     // private int unpaidCount;
 
-    public LeaveType(Long empid) {
-    }
+    //getter and setters
 
-    public LeaveType() {
-
-    }
 
     public int getId() {
         return id;
@@ -87,12 +83,12 @@ public class LeaveType {
         this.personalCount = personalCount;
     }
 
-    public int getUnpaidCount() {
-        return unpaidCount;
+    public int getPaidCount() {
+        return paidCount;
     }
 
-    public void setUnpaidCount(int unpaidCount) {
-        this.unpaidCount = unpaidCount;
+    public void setPaidCount(int paidCount) {
+        this.paidCount = paidCount;
     }
 
     public Long getEmpid() {

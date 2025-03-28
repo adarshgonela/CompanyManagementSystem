@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/leavetype")
 public class LeaveTypeController {
@@ -25,8 +28,23 @@ private LeaveConfig leaveConfig;
     leaveType.setPersonalCount(leaveConfig.getPersonalCount());
     leaveType.setRemoteWorkCount(leaveConfig.getRemoteWorkCount());
     leaveType.setSickLeaveCount(leaveConfig.getSickLeaveCount());
-    leaveType.setUnpaidCount(leaveConfig.getUnpaidCount());
+    leaveType.setPaidCount(leaveConfig.getPaidCount());
         return leaveTypeService.saveleavetypeservice(leaveType);
+    }
+
+    @GetMapping("/{empid}")
+    public Optional<LeaveType> getleavetypebyid( @PathVariable Long empid){
+
+                Optional<LeaveType> o=leaveTypeService.getleavetypebyid(empid);
+        if (!o.isPresent()) {
+            throw new NoSuchElementException("empid not found " + empid);
+        }
+                return Optional.of(o.get());
+    }
+
+    @PatchMapping("/update")
+    public LeaveType updateLeaveType(@RequestBody LeaveType leaveType) {
+    return  leaveTypeService.updateleavesbyempid(leaveType);
     }
 
 }

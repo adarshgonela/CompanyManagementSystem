@@ -22,7 +22,7 @@ public class EmployeeController {
       
         return employeeService.getEmployeeById(id);
     }
-    @PostMapping("/{id}")
+    @PostMapping("/post/{id}")
     public Optional<Employee> getEmployeeByIdpost(@PathVariable Long id) {
       
         return employeeService.getEmployeeById(id);
