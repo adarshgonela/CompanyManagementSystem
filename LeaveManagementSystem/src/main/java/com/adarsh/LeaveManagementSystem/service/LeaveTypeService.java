@@ -20,7 +20,7 @@ public class LeaveTypeService {
     public Optional<LeaveType> getleavetypebyid(@PathVariable Long empid){
         return  leaveTypedao.getleavetypebyid(empid);
     }
-    public LeaveType updateleavesbyempid(LeaveType leaveType) {
-    return  leaveTypedao.updateleavesbyempid(leaveType);
+    public LeaveType updateleavesbyempid(Long empid,LeaveType leaveType) {
+    return  leaveTypedao.updateleavesbyempid(empid , leaveType);
     }
 }

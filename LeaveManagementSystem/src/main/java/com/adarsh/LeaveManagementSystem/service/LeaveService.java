@@ -1,7 +1,10 @@
 package com.adarsh.LeaveManagementSystem.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.adarsh.LeaveManagementSystem.dao.LeaveDao;
@@ -24,7 +27,11 @@ public class LeaveService {
         return dao.updateLeave(leaverequest);
     }
 
-    public  List<LeaveRequest> findByEmployee(Long employeeId){
+    public Optional<LeaveRequest> findByEmployee(Long employeeId){
         return  dao.findByEmployee(employeeId);
+    }
+
+    public ResponseEntity<LeaveRequest> updatestatus(Long empid, LeaveRequest leaveRequest) {
+         return dao.updatestatus(empid,leaveRequest);
     }
 }

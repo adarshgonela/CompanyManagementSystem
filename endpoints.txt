@@ -17,3 +17,33 @@ login -->
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////
+leave apply 
+http://localhost:8765/LEAVEMANAGEMENTSYSTEM/leave/save POST
+{
+  "employeeid": 7,
+  "leaveType":"remoteworkcount",
+  "startDate": "2023-10-01",
+  "endDate": "2023-10-05",
+  "numberOfDays": 2,
+  "status": "PENDING",
+  "reason": "Annual vacation",
+  "requestedAt": "2023-09-25T10:00:00",
+  "approvedAt": null,
+  "rejectedAt": null,
+  "approvalStatus": "PENDING"
+}
+This method is a Spring Boot controller handler for handling leave requests and saving leave data. Here's a brief explanation of what it does:
+
+Validate Employee: It checks if the employee associated with the leave request exists by calling a Feign client (employeeFeignController.getEmployeeByIdpost). If the employee doesn't exist, it throws an exception.
+
+Validate Leave Type: It checks whether the leaveType is specified in the LeaveRequest. If not, it throws an exception.
+
+Retrieve Leave Balances: It fetches the leave balances of the employee by calling the leaveTypeController.getleavetypebyempid method. If no leave balance record is found for the employee, an exception is thrown.
+
+Check and Deduct Leave Balance: Based on the leave type specified (e.g., vacation, sick leave, remote work, personal leave, paid leave), it checks if the employee has enough leave days for the requested type. If the employee does not have enough days, it throws an exception. If enough days are available, it deducts the requested number of days from the corresponding leave type.
+
+Update Leave Record: It updates the employee's leave record by calling leaveTypeController.updateLeaveType to reflect the deducted leave days.
+
+Save or Request Leave: Finally, it calls a service method (service.requestleaveOrsaveleave) to process the leave request (this could either save the leave or take further action depending on the service implementation).
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

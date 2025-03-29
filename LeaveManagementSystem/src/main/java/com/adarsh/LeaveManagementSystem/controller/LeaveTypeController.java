@@ -5,8 +5,6 @@ import com.adarsh.LeaveManagementSystem.dto.LeaveType;
 import com.adarsh.LeaveManagementSystem.service.LeaveTypeService;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,7 +31,7 @@ private LeaveConfig leaveConfig;
     }
 
     @GetMapping("/{empid}")
-    public Optional<LeaveType> getleavetypebyid( @PathVariable Long empid){
+    public Optional<LeaveType> getleavetypebyempid( @PathVariable Long empid){
 
                 Optional<LeaveType> o=leaveTypeService.getleavetypebyid(empid);
         if (!o.isPresent()) {
@@ -42,9 +40,9 @@ private LeaveConfig leaveConfig;
                 return Optional.of(o.get());
     }
 
-    @PatchMapping("/update")
-    public LeaveType updateLeaveType(@RequestBody LeaveType leaveType) {
-    return  leaveTypeService.updateleavesbyempid(leaveType);
+    @PatchMapping("/update/{empid}")
+    public LeaveType updateLeaveType( @PathVariable Long empid,@RequestBody LeaveType leaveType) {
+    return  leaveTypeService.updateleavesbyempid(empid,leaveType);
     }
 
 }

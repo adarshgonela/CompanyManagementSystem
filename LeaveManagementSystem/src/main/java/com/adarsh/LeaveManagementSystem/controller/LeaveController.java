@@ -9,6 +9,7 @@ import com.adarsh.LeaveManagementSystem.refDto.Employee;
 import com.adarsh.LeaveManagementSystem.service.LeaveService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,168 +29,64 @@ public class LeaveController {
     @Autowired
     private LeaveTypeController leaveTypeController;
 
-//    @PostMapping("/save")
-//    public LeaveRequest requestleaveOrsaveleave(@RequestBody LeaveRequest leaverequest) {
-//           Optional<Employee>  optional = employeeFeignController.getEmployeeByIdpost(leaverequest.getEmployeeid());
-//        System.out.println(optional.get());
-//        if (!optional.isPresent()) {
-//            throw new RuntimeException("Employee not found");
-//        }
-//       String leavetypee= leaverequest.getLeaveType();
-//
-//        if (leavetypee.equals("vacationCount")) {
-//          int days=  leaverequest.getNumberOfDays();
-//          Optional<LeaveType> optionalLeaveType  =leaveTypeController.getleavetypebyid(leaverequest.getEmployeeid());
-//          int tablevacationcount=optionalLeaveType.get().getVacationCount();
-//          int remainingvacationleaves= tablevacationcount-days;
-//
-//        } else if (leavetypee.equals("sickLeaveCount"))
-//        {
-//
-//        } else if (leavetypee.equals("remoteWorkCount")) {
-//        }else if (leavetypee.equals("personalCount")) {
-//        }else if (leavetypee.equals("unpaidCount")) {
-//        }else{
-//            throw new RuntimeException("please enter the valid leave type");
-//        }
-//        return service.requestleaveOrsaveleave(leaverequest);
-//
-//    }
-
-//    @PostMapping("/save")
-//    public LeaveRequest requestleaveOrsaveleave(@RequestBody LeaveRequest leaverequest) {
-//        // Validate employee exists
-//        Optional<Employee> optional = employeeFeignController.getEmployeeByIdpost(leaverequest.getEmployeeid());
-//        if (!optional.isPresent()) {
-//            throw new RuntimeException("Employee not found");
-//        }
-//
-//        String leaveType = leaverequest.getLeaveType();
-//        System.out.println(leaveType);
-//        int days = leaverequest.getNumberOfDays();
-//        System.out.println(days);
-//        // Get current leave balances
-//        Optional<LeaveType> optionalLeaveType = leaveTypeController.getleavetypebyid(leaverequest.getEmployeeid());
-//        if (!optionalLeaveType.isPresent()) {
-//            throw new RuntimeException("Leave balance record not found for employee");
-//        }
-//
-//        LeaveType leaveTypeEntity = optionalLeaveType.get();
-//        LeaveType updatedLeaveType = new LeaveType();
-////        updatedLeaveType.setId(leaveTypeEntity.getId());
-//        updatedLeaveType.setEmpid(leaveTypeEntity.getEmpid());
-//
-//        // Copy all existing values first
-//        updatedLeaveType.setVacationCount(leaveTypeEntity.getVacationCount());
-//        updatedLeaveType.setSickLeaveCount(leaveTypeEntity.getSickLeaveCount());
-//        updatedLeaveType.setRemoteWorkCount(leaveTypeEntity.getRemoteWorkCount());
-//        updatedLeaveType.setPersonalCount(leaveTypeEntity.getPersonalCount());
-//        updatedLeaveType.setUnpaidCount(leaveTypeEntity.getUnpaidCount());
-//
-//        // Update only the relevant leave type
-//        switch (leaveType) {
-//            case "vacationCount":
-//                if (leaveTypeEntity.getVacationCount() < days) {
-//                    throw new RuntimeException("Not enough vacation days remaining");
-//                }
-//
-//                updatedLeaveType.setVacationCount(leaveTypeEntity.getVacationCount() - days);
-//                break;
-//
-//            case "sickLeaveCount":
-//                if (leaveTypeEntity.getSickLeaveCount() < days) {
-//                    throw new RuntimeException("Not enough sick leave days remaining");
-//                }
-//                updatedLeaveType.setSickLeaveCount(leaveTypeEntity.getSickLeaveCount() - days);
-//                break;
-//
-//            case "remoteWorkCount":
-//                if (leaveTypeEntity.getRemoteWorkCount() < days) {
-//                    throw new RuntimeException("Not enough remote work days remaining");
-//                }
-//                updatedLeaveType.setRemoteWorkCount(leaveTypeEntity.getRemoteWorkCount() - days);
-//                break;
-//
-//            case "personalCount":
-//                if (leaveTypeEntity.getPersonalCount() < days) {
-//                    throw new RuntimeException("Not enough personal days remaining");
-//                }
-//                updatedLeaveType.setPersonalCount(leaveTypeEntity.getPersonalCount() - days);
-//                break;
-//
-//            case "unpaidCount":
-//                // Typically unpaid leave doesn't have a limit, but we'll still track it
-//                updatedLeaveType.setUnpaidCount(leaveTypeEntity.getUnpaidCount() + days);
-//                break;
-//
-//            default:
-//                throw new RuntimeException("Please enter a valid leave type");
-//        }
-//
-//        // Update the leave type record
-//        leaveTypeController.updateLeaveType(updatedLeaveType);
-//
-//        // Process the leave request
-//        return service.requestleaveOrsaveleave(leaverequest);
-//    }
-
-
     @PostMapping("/save")
     public LeaveRequest requestleaveOrsaveleave(@RequestBody LeaveRequest leaverequest) {
-        LeaveType lt=new LeaveType();
         // Validate employee exists
         Optional<Employee> optional = employeeFeignController.getEmployeeByIdpost(leaverequest.getEmployeeid());
-        if (optional.isPresent()) {
-           int days= leaverequest.getNumberOfDays();
-
-            if ((leaverequest.getLeaveType()).equals("vacationCount")) {
-                if (lt.getVacationCount() < days)
-                {
-                    int remainingcount = days - lt.getVacationCount();
-                    System.out.println(remainingcount+" i am vacationcount");
-                    lt.setVacationCount(remainingcount);
-                } else if ((leaverequest.getLeaveType()).equals("sickLeaveCount")) {
-                    if (lt.getSickLeaveCount() < days)
-                    {
-                        int remainingcount = days - lt.getSickLeaveCount();
-                        lt.setVacationCount(remainingcount);
-                    }
-                } else if ((leaverequest.getLeaveType()).equals("remoteWorkCount")) {
-                    if (lt.getRemoteWorkCount() < days)
-                    {
-                        int remainingcount = days - lt.getRemoteWorkCount();
-                        lt.setVacationCount(remainingcount);
-                    }
-                } else if ((leaverequest.getLeaveType()).equals("personalCount")) {
-                    if (lt.getPersonalCount() < days)
-                    {
-                        int remainingcount = days - lt.getPersonalCount();
-                        lt.setVacationCount(remainingcount);
-                    }
-                } else if ((leaverequest.getLeaveType()).equals("paidCount")) {
-                    if (lt.getPaidCount() < days)
-                    {
-                        int remainingcount = days - lt.getPaidCount();
-                        lt.setVacationCount(remainingcount);
-                    }
-                } else {
-                    throw new RuntimeException("Not enough vacation days remaining");
-
-                }
-
-//                updatedLeaveType.setVacationCount(leaveTypeEntity.getVacationCount() - days);
-            }
-
-        }else{
+        if (!optional.isPresent()) {
             throw new RuntimeException("Employee not found");
-
         }
 
+        // Validate leave type is not null
+        if (leaverequest.getLeaveType() == null) {
+            throw new RuntimeException("Leave type must be specified");
+        }
 
-        lt.setEmpid(leaverequest.getEmployeeid());
-        System.out.println(lt+" i am leavetype");
+        // Get current leave balances
+        LeaveType lt = leaveTypeController.getleavetypebyempid(leaverequest.getEmployeeid())
+                .orElseThrow(() -> new RuntimeException("Leave balances not found for employee"));
+
+        int days = leaverequest.getNumberOfDays();
+        String leaveType = leaverequest.getLeaveType();
+
+        // Check and deduct leave balance
+        switch (leaveType.toLowerCase()) {
+            case "vacationcount":
+                if (lt.getVacationCount() < days) {
+                    throw new RuntimeException("Not enough vacation days remaining");
+                }
+                lt.setVacationCount(lt.getVacationCount() - days);
+                break;
+            case "sickleavecount":
+                if (lt.getSickLeaveCount() < days) {
+                    throw new RuntimeException("Not enough sick leave days remaining");
+                }
+                lt.setSickLeaveCount(lt.getSickLeaveCount() - days);
+                break;
+            case "remoteworkcount":
+                if (lt.getRemoteWorkCount() < days) {
+                    throw new RuntimeException("Not enough remote work days remaining");
+                }
+                lt.setRemoteWorkCount(lt.getRemoteWorkCount() - days);
+                break;
+            case "personalcount":
+                if (lt.getPersonalCount() < days) {
+                    throw new RuntimeException("Not enough personal days remaining");
+                }
+                lt.setPersonalCount(lt.getPersonalCount() - days);
+                break;
+            case "paidcount":
+                if (lt.getPaidCount() < days) {
+                    throw new RuntimeException("Not enough paid days remaining");
+                }
+                lt.setPaidCount(lt.getPaidCount() - days);
+                break;
+            default:
+                throw new RuntimeException("Invalid leave type specified");
+        }
+
         // Update the leave type record
-        leaveTypeController.updateLeaveType(lt);
+        leaveTypeController.updateLeaveType(leaverequest.getEmployeeid(), lt);
 
         // Process the leave request
         return service.requestleaveOrsaveleave(leaverequest);
@@ -214,7 +111,7 @@ public class LeaveController {
 
 
     @GetMapping("/leaveid/{employeeId}")
-    public  List<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
+    public  Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
         return  service.findByEmployee(employeeId);
     }
 
@@ -225,5 +122,9 @@ public class LeaveController {
         return Optional.of(o.get());
     }
 
+    @PatchMapping("/update-status")
+    public ResponseEntity<LeaveRequest> updatestatus(Long empid, LeaveRequest leaveRequest) {
+   return service.updatestatus(empid,leaveRequest);
+    }
 
 }
