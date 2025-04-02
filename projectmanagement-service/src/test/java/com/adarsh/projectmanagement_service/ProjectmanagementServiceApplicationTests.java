@@ -1,10 +1,10 @@
-package com.adarsh.projectmanagementsystem;
+package com.adarsh.projectmanagement_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProjectmanagementsystemApplicationTests {
+class ProjectmanagementServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

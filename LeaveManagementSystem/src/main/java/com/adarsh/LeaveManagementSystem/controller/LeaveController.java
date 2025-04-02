@@ -1,6 +1,5 @@
 package com.adarsh.LeaveManagementSystem.controller;
 
-import com.adarsh.LeaveManagementSystem.ExceptionHandlers.InvalidLeaveRequestException;
 import com.adarsh.LeaveManagementSystem.ExceptionHandlers.LeaveRequestNotFoundException;
 import com.adarsh.LeaveManagementSystem.Feign.EmployeeFeignController;
 import com.adarsh.LeaveManagementSystem.dto.LeaveRequest;
@@ -9,7 +8,6 @@ import com.adarsh.LeaveManagementSystem.refDto.Employee;
 import com.adarsh.LeaveManagementSystem.service.LeaveService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -122,9 +120,9 @@ public class LeaveController {
         return Optional.of(o.get());
     }
 
-    @PatchMapping("/update-status")
-    public ResponseEntity<LeaveRequest> updatestatus(Long empid, LeaveRequest leaveRequest) {
-   return service.updatestatus(empid,leaveRequest);
+    @PatchMapping("/update-status/{id}")
+    public LeaveRequest updatestatus(@PathVariable Long id, @RequestBody LeaveRequest leaveRequest) {
+   return service.updatestatus(id,leaveRequest);
     }
 
 }

@@ -13,15 +13,15 @@ import com.adarsh.LeaveManagementSystem.repo.LeaveRepo;
 
 @Repository
 public class LeaveDao {
-    
+
     @Autowired
     private LeaveRepo leaveRepo;
 
-    public LeaveRequest requestleaveOrsaveleave(LeaveRequest leaverequest){
+    public LeaveRequest requestleaveOrsaveleave(LeaveRequest leaverequest) {
         return leaveRepo.save(leaverequest);
     }
 
-    public List<LeaveRequest> getallleave(){
+    public List<LeaveRequest> getallleave() {
         return leaveRepo.findAll();
     }
 
@@ -30,32 +30,32 @@ public class LeaveDao {
         if (optional.isPresent()) {
             // If the LeaveRequest exists, update it
             LeaveRequest existingLeaveRequest = optional.get();
-            existingLeaveRequest.setLeaveType(leaveRequest.getLeaveType());  // Example of updating a field
+            existingLeaveRequest.setLeaveType(leaveRequest.getLeaveType()); // Example of updating a field
             existingLeaveRequest.setStartDate(leaveRequest.getStartDate());
             existingLeaveRequest.setEndDate(leaveRequest.getEndDate());
             // Add any other fields that need to be updated
 
             return leaveRepo.save(existingLeaveRequest); // Save the updated leave request
         } else {
-            // If the LeaveRequest doesn't exist, you might want to throw an exception or handle it
+            // If the LeaveRequest doesn't exist, you might want to throw an exception or
+            // handle it
             throw new RuntimeException("LeaveRequest not found with ID: " + leaveRequest.getLeaveRequestId());
         }
     }
-  public  Optional<LeaveRequest> findByEmployee(Long employeeId){
-        return  leaveRepo.findByEmployee(employeeId);
-  }
 
+    public Optional<LeaveRequest> findByEmployee(Long employeeId) {
+        return leaveRepo.findByEmployee(employeeId);
+    }
 
     public LeaveRequest updatestatus(Long id, LeaveRequest leaveRequest) {
 
-      Optional<LeaveRequest> optionalLeaveRequest=  leaveRepo.findById(id);
+        Optional<LeaveRequest> optionalLeaveRequest = leaveRepo.findById(id);
 
         if (optionalLeaveRequest.isPresent()) {
             LeaveRequest existingLeaveRequest = optionalLeaveRequest.get();
             existingLeaveRequest.setStatus(leaveRequest.getStatus());
-return             leaveRepo.save(existingLeaveRequest);
+            return leaveRepo.save(existingLeaveRequest);
         }
-
         // Return a 404 Not Found response if the leave request doesn't exist
         return null;
     }
