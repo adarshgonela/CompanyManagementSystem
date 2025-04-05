@@ -1,6 +1,11 @@
 package com.adarsh.projectmanagement_service.dao;
 
+import com.adarsh.projectmanagement_service.Exceptions.EmployeeNotFound;
+import com.adarsh.projectmanagement_service.Exceptions.ProjectNotFoundException;
+import com.adarsh.projectmanagement_service.clientmethods.FeignclientmethodsEMS;
+import com.adarsh.projectmanagement_service.dto.EmployeeClient;
 import com.adarsh.projectmanagement_service.dto.ProjectStatus;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +20,10 @@ public class Projectdao {
 
     @Autowired
     private Projectrepo  projectrepo;
+
+
+    @Autowired
+    private FeignclientmethodsEMS feignclientmethodsEMS;
 
 public Project createproject(Project project){
     return projectrepo.save(project);
@@ -53,11 +62,31 @@ public Project createproject(Project project){
         return projectrepo.findByStatus(status);
     }
 
+    public Optional<Project> getdatabyprojectname(String name){
+        return projectrepo.getdatabyprojectname(name);
+    }
 
     // Employee management endpoints
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Project addEmployeeToProject(Long projectId, Long empid) {
+        // Validate input parameters
+        if (projectId == null || empid == null) {
+            throw new IllegalArgumentException("Project ID and Employee ID cannot be null");
+        }
+
+        // Check if employee exists
+        Optional<EmployeeClient> employeeClient = feignclientmethodsEMS.getEmployeeByIdpost(empid);
+        if (!employeeClient.isPresent()) {
+            throw new EmployeeNotFound("Employee not found with ID: " + empid);
+        }
+
+        // Retrieve and update project
         Project project = getProjectById(projectId);
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found with ID: " + projectId);
+        }
+
+        // Add employee to project and save
         project.addEmployeeId(empid);
         return projectrepo.save(project);
     }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -19,8 +20,8 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-@PostMapping
-    public Project createproject(Project project) {
+@PostMapping("/save")
+    public Project createproject(@RequestBody Project project) {
         return projectService.createproject(project);
     }
 
@@ -56,6 +57,12 @@ public class ProjectController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Project>> getProjectsByStatus(@PathVariable ProjectStatus status) {
         List<Project> projects = projectService.getProjectsByStatus(status);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Optional<Project>> getProjectsByStatus(@PathVariable String name) {
+        Optional<Project> projects=projectService.getdatabyprojectname(name);
         return ResponseEntity.ok(projects);
     }
 

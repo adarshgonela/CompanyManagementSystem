@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Projectrepo extends JpaRepository<Project,Long> {
     List<Project> findByNameContainingIgnoreCase(String name);
@@ -15,4 +16,8 @@ public interface Projectrepo extends JpaRepository<Project,Long> {
     // Custom query to find projects containing a specific employee
     @Query("SELECT p FROM Project p JOIN p.employeeIds e WHERE e = :empid")
     List<Project> findByEmployeeId(@Param("empid") Long empid);
+
+    @Query("SELECT p FROM Project p WHERE p.name = :name")
+Optional<Project> getdatabyprojectname(@Param("name") String name);
+
 }

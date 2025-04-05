@@ -19,7 +19,8 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Project name must not be blank")
+
     @Size(max = 100)
     private String name;
 
