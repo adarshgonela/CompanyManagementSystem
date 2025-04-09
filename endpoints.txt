@@ -1,3 +1,4 @@
+before signup add roles manually then do operations
 signup -->  
 {
   "username": "user6",
@@ -47,3 +48,4 @@ Update Leave Record: It updates the employee's leave record by calling leaveType
 
 Save or Request Leave: Finally, it calls a service method (service.requestleaveOrsaveleave) to process the leave request (this could either save the leave or take further action depending on the service implementation).
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
