@@ -5,7 +5,6 @@ import com.adarsh.projectmanagement_service.Exceptions.ProjectNotFoundException;
 import com.adarsh.projectmanagement_service.clientmethods.FeignclientmethodsEMS;
 import com.adarsh.projectmanagement_service.dto.EmployeeClient;
 import com.adarsh.projectmanagement_service.dto.ProjectStatus;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -62,8 +61,8 @@ public Project createproject(Project project){
         return projectrepo.findByStatus(status);
     }
 
-    public Optional<Project> getdatabyprojectname(String name){
-        return projectrepo.getdatabyprojectname(name);
+    public List<Project> getdatabyprojectname(String name){
+        return projectrepo.findByName(name);
     }
 
     // Employee management endpoints

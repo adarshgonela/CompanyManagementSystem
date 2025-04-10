@@ -17,7 +17,10 @@ public interface Projectrepo extends JpaRepository<Project,Long> {
     @Query("SELECT p FROM Project p JOIN p.employeeIds e WHERE e = :empid")
     List<Project> findByEmployeeId(@Param("empid") Long empid);
 
-    @Query("SELECT p FROM Project p WHERE p.name = :name")
-Optional<Project> getdatabyprojectname(@Param("name") String name);
+//     @Query("SELECT name FROM Project p WHERE p.name = :name")
+// Optional<Project> getdatabyprojectname(@Param("name") String name);
+
+List<Project> findByName(String name);
+
 
 }

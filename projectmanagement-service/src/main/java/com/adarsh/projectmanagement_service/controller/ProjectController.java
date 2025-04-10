@@ -6,9 +6,6 @@ import com.adarsh.projectmanagement_service.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +58,8 @@ public class ProjectController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<Project>> getProjectsByStatus(@PathVariable String name) {
-        Optional<Project> projects=projectService.getdatabyprojectname(name);
+    public ResponseEntity<List<Project>> getProjectsByname(@PathVariable String name) {
+        List<Project> projects=projectService.getdatabyprojectname(name);
         return ResponseEntity.ok(projects);
     }
 
