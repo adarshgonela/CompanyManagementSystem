@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -17,8 +16,8 @@ public class ProjectService {
     private Projectdao projectdao;
 
     public Project createproject(Project project) {
-        Optional<Project> optional = projectdao.getdatabyprojectname(project.getName());
-        if (!optional.isEmpty()) {
+        List<Project> optional = projectdao.getdatabyprojectname(project.getName());
+        if (optional.isEmpty()) {
             return projectdao.createproject(project);
         }
         throw new ProjectNotFoundException("the project you are entering is already present");
