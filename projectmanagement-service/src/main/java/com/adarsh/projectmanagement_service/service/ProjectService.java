@@ -16,6 +16,7 @@ public class ProjectService {
     private Projectdao projectdao;
 
     public Project createproject(Project project) {
+        
         List<Project> optional = projectdao.getdatabyprojectname(project.getName());
         if (optional.isEmpty()) {
             return projectdao.createproject(project);
@@ -60,6 +61,13 @@ public class ProjectService {
         return projectdao.getdatabyprojectname(name);
     }
 
+    public Project updateEmployeeId(Long projectId, Long employeeId) {
+      return projectdao.updateEmployeeId(projectId, employeeId);
+    }
+    public Project removeEmployeeIdfromProject(Long projectId, Long employeeId) {
+       return projectdao.removeEmployeeFromProject(projectId, employeeId);
+    }
+
     // Employee management endpoints
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Project addEmployeeToProject(Long projectId, Long empid) {
@@ -79,4 +87,8 @@ public class ProjectService {
     public List<Project> getProjectsForEmployee(Long empid) {
         return projectdao.getProjectsForEmployee(empid);
     }
+
+   
+
+ 
 }

@@ -25,7 +25,17 @@ public class Projectdao {
     private FeignclientmethodsEMS feignclientmethodsEMS;
 
 public Project createproject(Project project){
-    return projectrepo.save(project);
+    
+    
+   List<Long> employeeClients=  project.getEmployeeIds();
+   for (Long employeesids : employeeClients) {
+    Optional<EmployeeClient > optional=feignclientmethodsEMS.getEmployeeByIdpost(employeesids);
+    if (optional.isPresent()) {
+        return projectrepo.save(project);
+    }
+    
+   }
+    throw new EmployeeNotFound("the employee Ids you are trying to insert is not registered as employee db");
 
 }
 
@@ -63,6 +73,42 @@ public Project createproject(Project project){
 
     public List<Project> getdatabyprojectname(String name){
         return projectrepo.findByName(name);
+    }
+
+    public Project updateEmployeeId(Long projectId, Long employeeId) {
+        // Check if the project exists
+        Optional<Project> projectOpt = projectrepo.findById(projectId);
+        if (!projectOpt.isPresent()) {
+            throw new RuntimeException("Project not found with id: " + projectId);
+        }
+        
+        Project project = projectOpt.get();
+
+        // Check if the employee ID already exists
+        if (project.getEmployeeIds().contains(employeeId)) {
+            throw new RuntimeException("Employee ID " + employeeId + " is already associated with project " + projectId);
+        }
+
+        project.addEmployeeId(employeeId);
+        return projectrepo.save(project);
+    }
+
+    public Project removeEmployeeId(Long projectId, Long employeeId) {
+        // Check if the project exists
+        Optional<Project> projectOpt = projectrepo.findById(projectId);
+        if (!projectOpt.isPresent()) {
+            throw new RuntimeException("Project not found with id: " + projectId);
+        }
+
+        Project project = projectOpt.get();
+
+        // Check if the employee ID exists before removing
+        if (!project.getEmployeeIds().contains(employeeId)) {
+            throw new RuntimeException("Employee ID " + employeeId + " is not associated with project " + projectId);
+        }
+
+        project.removeEmployeeId(employeeId);
+        return projectrepo.save(project);
     }
 
     // Employee management endpoints

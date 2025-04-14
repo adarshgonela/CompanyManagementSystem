@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -51,6 +50,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Project>> getProjectsByStatus(@PathVariable ProjectStatus status) {
         List<Project> projects = projectService.getProjectsByStatus(status);
@@ -61,6 +61,17 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getProjectsByname(@PathVariable String name) {
         List<Project> projects=projectService.getdatabyprojectname(name);
         return ResponseEntity.ok(projects);
+    }
+
+    @PostMapping("/{projectId}/employees/{employeeId}")
+    public ResponseEntity<Project> updateEmployeeIdfromProject(  @PathVariable Long projectId,  @PathVariable Long employeeId) {
+        Project updatedProject= projectService.updateEmployeeId(projectId,employeeId);
+    return ResponseEntity.ok(updatedProject);
+    }
+    @DeleteMapping("/{projectId}/employees/{employeeId}")
+    public ResponseEntity<Project> removeEmployeeIdfromProject(  @PathVariable Long projectId,  @PathVariable Long employeeId) {
+        Project updatedProject= projectService.removeEmployeeIdfromProject(projectId,employeeId);
+    return ResponseEntity.ok(updatedProject);
     }
 
     // Employee management endpoints
