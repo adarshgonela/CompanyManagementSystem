@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.adarsh.projectmanagement_service.Exceptions.ResourceNotFoundException;
 import com.adarsh.projectmanagement_service.dto.Task;
 import com.adarsh.projectmanagement_service.repo.TaskRepository;
-
+@Repository
 public class TaskDao {
 @Autowired
     private TaskRepository taskRepository;
@@ -37,9 +38,6 @@ public class TaskDao {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
-        task.setEmpStatus(taskDTO.getEmpStatus()); // Updated to empStatus
-        task.setManagerStatus(taskDTO.getManagerStatus()); // Update managerStatus
-        task.setEmpId(taskDTO.getEmpId());
        return taskRepository.save(task);
     }
 
@@ -49,6 +47,8 @@ public class TaskDao {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         taskRepository.delete(task);
     }
+
+   
 
    
 }
