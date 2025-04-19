@@ -7,14 +7,16 @@ import org.hibernate.annotations.ColumnDefault;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 @Data
 @Entity
 @Table(name = "tasks")
 public class Task {
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Project project;
 
     @Column(nullable = false)
     private String title;
@@ -22,13 +24,12 @@ public class Task {
     private String description;
 
     @Column(nullable = false)
-   @ColumnDefault("'PENDING'")
+    @ColumnDefault("'PENDING'")
     private String status; // Renamed from status
 
     // @Column
     // private String managerStatus; // New field for manager status
 
-    @Column
     private Long empId;
 
     private LocalDateTime createdAt;
@@ -36,12 +37,16 @@ public class Task {
 
     // @PrePersist
     // protected void onCreate() {
-    //     createdAt = LocalDateTime.now();
-    //     updatedAt = LocalDateTime.now();
+    // createdAt = LocalDateTime.now();
+    // updatedAt = LocalDateTime.now();
     // }
 
     // @PreUpdate
     // protected void onUpdate() {
-    //     updatedAt = LocalDateTime.now();
+    // updatedAt = LocalDateTime.now();
     // }
+
+
+    //getters and setters
+    
 }

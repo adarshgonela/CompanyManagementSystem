@@ -49,3 +49,29 @@ Update Leave Record: It updates the employee's leave record by calling leaveType
 Save or Request Leave: Finally, it calls a service method (service.requestleaveOrsaveleave) to process the leave request (this could either save the leave or take further action depending on the service implementation).
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+create task
+http://localhost:8765/PROJECTMANAGEMENT-SERVICE/api/task/create
+{
+  "title": "Design Login Page",
+  "description": "Create UI and backend integration for login page",
+  "status": "PENDING",
+  "empId": 1,
+  "createdAt": "2025-04-19T09:00:00",
+  "updatedAt": "2025-04-19T09:00:00",
+  "project": {
+    "id": 1
+  }
+}
+get task using id
+http://localhost:8765/PROJECTMANAGEMENT-SERVICE/api/task/get/2
+
+ update task
+ http://localhost:8765/PROJECTMANAGEMENT-SERVICE/api/task/update/1
+ {
+   "columns": "data"
+}
+
+delete task
+ http://localhost:8765/PROJECTMANAGEMENT-SERVICE/api/task/delete/1
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
