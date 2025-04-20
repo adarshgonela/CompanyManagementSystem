@@ -3,7 +3,6 @@ package com.adarsh.springjwt.payload.request;
 import java.util.Set;
 
 import jakarta.validation.constraints.*;
-
 public class SignupRequest {
   @NotBlank
   @Size(min = 3, max = 20)
@@ -14,7 +13,7 @@ public class SignupRequest {
   @Email
   private String email;
 
-  private Set<String> role;
+  private Set<Long> role;
 
   @NotBlank
   @Size(min = 6, max = 40)
@@ -44,11 +43,16 @@ public class SignupRequest {
     this.password = password;
   }
 
-  public Set<String> getRole() {
-    return this.role;
+  public Set<Long> getRole() {
+    return role;
   }
 
-  public void setRole(Set<String> role) {
+  public void setRole(Set<Long> role) {
     this.role = role;
   }
+
+
+
+
+
 }

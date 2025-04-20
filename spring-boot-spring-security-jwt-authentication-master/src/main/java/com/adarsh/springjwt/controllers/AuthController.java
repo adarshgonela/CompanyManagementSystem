@@ -38,6 +38,9 @@ import com.adarsh.springjwt.repository.RoleRepository;
 import com.adarsh.springjwt.repository.UserRepository;
 import com.adarsh.springjwt.security.jwt.JwtUtils;
 import com.adarsh.springjwt.security.services.UserDetailsImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 // @CrossOrigin(origins = "http://localhost:4200")  // Enable CORS for this controller
 @RestController
@@ -192,14 +195,86 @@ public ResponseEntity<?> checkSession(HttpSession session) {
 
 
 
-  @PostMapping("/signup")
+//   @PostMapping("/signup")
+// public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+//     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+//         return ResponseEntity
+//                 .badRequest()
+//                 .body(new MessageResponse("Error: Username is already taken!"));
+//     }
+
+//     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+//         return ResponseEntity
+//                 .badRequest()
+//                 .body(new MessageResponse("Error: Email is already in use!"));
+//     }
+
+//     // Create new user's account
+//     User user = new User(signUpRequest.getUsername(), 
+//                signUpRequest.getEmail(),
+//                encoder.encode(signUpRequest.getPassword()));
+
+//     Set<String> strRoles = signUpRequest.getRole();
+//     Set<Role> roles = new HashSet<>();
+
+//     if (strRoles == null) {
+//         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//         roles.add(userRole);
+//     } else {
+//         strRoles.forEach(role -> {
+//             switch (role) {
+//             case "admin":
+//                 Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+//                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                 roles.add(adminRole);
+
+//                 break;
+//             case "mod":
+//                 Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+//                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                 roles.add(modRole);
+
+//                 break;
+//             default:
+//                 Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                 roles.add(userRole);
+//             }
+//         });
+//     }
+
+//     user.setRoles(roles);
+//     userRepository.save(user);
+
+//     // Save the user ID in another table using Ems_lms_client
+//     EmsDtoClient emsDtoClient = new EmsDtoClient();
+//     emsDtoClient.setEmpid(user.getId()); // Assuming user.getId() returns the user ID
+//     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
+// Leavetypedtoclient l=new Leavetypedtoclient();
+// l.setEmpid(user.getId());
+// ResponseEntity<String> response1 =ems_lms_client.createleaverowafterregister(l);
+//     if (response.getStatusCode().is2xxSuccessful() && response1.getStatusCode().is2xxSuccessful()) {
+//         return ResponseEntity.ok(new MessageResponse("User registered successfully!  and employee can enter remaining data now"));
+//     } else {
+//         // Handle the case where saving to the other table failed
+//         return ResponseEntity
+//                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                 .body(new MessageResponse("Error: User registered but failed to save in another table."));
+//     }
+// }
+
+
+@PostMapping("/signup")
 public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    // Check if username is already taken
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
         return ResponseEntity
                 .badRequest()
                 .body(new MessageResponse("Error: Username is already taken!"));
     }
 
+    // Check if email is already in use
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
         return ResponseEntity
                 .badRequest()
@@ -207,38 +282,27 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
     }
 
     // Create new user's account
-    User user = new User(signUpRequest.getUsername(), 
-               signUpRequest.getEmail(),
-               encoder.encode(signUpRequest.getPassword()));
+    User user = new User(
+            signUpRequest.getUsername(),
+            signUpRequest.getEmail(),
+            encoder.encode(signUpRequest.getPassword())
+    );
 
-    Set<String> strRoles = signUpRequest.getRole();
+    // Handle roles based on IDs
+    Set<Long> roleIds = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
 
-    if (strRoles == null) {
+    if (roleIds == null || roleIds.isEmpty()) {
         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new RuntimeException("Error: Default role ROLE_USER not found."));
         roles.add(userRole);
     } else {
-        strRoles.forEach(role -> {
-            switch (role) {
-            case "admin":
-                Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                roles.add(adminRole);
-
-                break;
-            case "mod":
-                Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                roles.add(modRole);
-
-                break;
-            default:
-                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                roles.add(userRole);
-            }
-        });
+        // Fetch roles by IDs
+        for (Long roleId : roleIds) {
+            Role role = roleRepository.findById(roleId)
+                    .orElseThrow(() -> new RuntimeException("Error: Role with ID " + roleId + " not found."));
+            roles.add(role);
+        }
     }
 
     user.setRoles(roles);
@@ -246,15 +310,16 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
 
     // Save the user ID in another table using Ems_lms_client
     EmsDtoClient emsDtoClient = new EmsDtoClient();
-    emsDtoClient.setEmpid(user.getId()); // Assuming user.getId() returns the user ID
+    emsDtoClient.setEmpid(user.getId());
     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
-Leavetypedtoclient l=new Leavetypedtoclient();
-l.setEmpid(user.getId());
-ResponseEntity<String> response1 =ems_lms_client.createleaverowafterregister(l);
+
+    Leavetypedtoclient leaveTypeDtoClient = new Leavetypedtoclient();
+    leaveTypeDtoClient.setEmpid(user.getId());
+    ResponseEntity<String> response1 = ems_lms_client.createleaverowafterregister(leaveTypeDtoClient);
+
     if (response.getStatusCode().is2xxSuccessful() && response1.getStatusCode().is2xxSuccessful()) {
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!  and employee can enter remaining data now"));
+        return ResponseEntity.ok(new MessageResponse("User registered successfully! Employee can enter remaining data now."));
     } else {
-        // Handle the case where saving to the other table failed
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new MessageResponse("Error: User registered but failed to save in another table."));
