@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.adarsh.springjwt.clientResponses.EmsDtoClient;
 import com.adarsh.springjwt.clientResponses.Leavetypedtoclient;
 import com.adarsh.springjwt.clients.Ems_lms_client;
-import com.adarsh.springjwt.models.ERole;
 import com.adarsh.springjwt.models.Role;
 import com.adarsh.springjwt.models.User;
 import com.adarsh.springjwt.payload.request.LoginRequest;
@@ -262,7 +261,6 @@ public ResponseEntity<?> checkSession(HttpSession session) {
 //     }
 // }
 
-
 @PostMapping("/signup")
 public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     // Check if username is already taken
@@ -279,34 +277,32 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
                 .body(new MessageResponse("Error: Email is already in use!"));
     }
 
-    // Create new user's account
+    // Ensure roles are provided
+    if (signUpRequest.getRole() == null || signUpRequest.getRole().isEmpty()) {
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: At least one role ID must be specified"));
+    }
+
+    // Create new user
     User user = new User(
             signUpRequest.getUsername(),
             signUpRequest.getEmail(),
             encoder.encode(signUpRequest.getPassword())
     );
 
-    // Handle roles based on IDs
-    Set<Long> roleIds = signUpRequest.getRole();
+    // Fetch roles using role IDs
     Set<Role> roles = new HashSet<>();
-
-    if (roleIds == null || roleIds.isEmpty()) {
-        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Default role ROLE_USER not found."));
-        roles.add(userRole);
-    } else {
-        // Fetch roles by IDs
-        for (Long roleId : roleIds) {
-            Role role = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new RuntimeException("Error: Role with ID " + roleId + " not found."));
-            roles.add(role);
-        }
+    for (Long roleId : signUpRequest.getRole()) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Error: Role with ID " + roleId + " not found."));
+        roles.add(role);
     }
 
     user.setRoles(roles);
     userRepository.save(user);
 
-    // Save the user ID in another table using Ems_lms_client
+    // Save user ID in external EMS + LMS services
     EmsDtoClient emsDtoClient = new EmsDtoClient();
     emsDtoClient.setEmpid(user.getId());
     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
@@ -320,7 +316,7 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRe
     } else {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new MessageResponse("Error: User registered but failed to save in another table."));
+                .body(new MessageResponse("Error: User registered but failed to save in another system."));
     }
 }
 
