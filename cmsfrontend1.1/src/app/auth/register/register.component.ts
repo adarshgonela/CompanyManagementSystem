@@ -9,34 +9,32 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent implements OnInit{
+export class RegisterComponent {
   registrationForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.registrationForm = this.fb.group(
-      {
-        name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', [Validators.required]],
-      },
-      { validator: this.passwordMatchValidator }
-    );
+  constructor(private fb: FormBuilder) {
+    this.createForm();
   }
 
-  // Custom validator to check if password and confirm password match
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
+  createForm() {
+    this.registrationForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+      role: ['user', Validators.required] // Make sure this exists
+    }, { validator: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(formGroup: FormGroup) {
+    const password = formGroup.get('password')?.value;
+    const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onSubmit(): void {
+  onSubmit() {
     if (this.registrationForm.valid) {
-      console.log('Form Submitted:', this.registrationForm.value);
-      // Here you can submit the form data to your backend or take further actions
+      console.log(this.registrationForm.value);
     }
   }
 }
