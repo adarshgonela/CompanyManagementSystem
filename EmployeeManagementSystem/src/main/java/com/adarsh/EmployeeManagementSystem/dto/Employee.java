@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Employee {
     public Employee(Long employeeId, String string, String string2, String string3) {
-        //TODO Auto-generated constructor stub
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
