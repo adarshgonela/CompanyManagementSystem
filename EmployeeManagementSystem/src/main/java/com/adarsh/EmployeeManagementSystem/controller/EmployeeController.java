@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -19,18 +18,19 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public Optional<Employee> getEmployeeById(@PathVariable Long id) {
-      
+
         return employeeService.getEmployeeById(id);
     }
+
     @PostMapping("/post/{id}")
     public Optional<Employee> getEmployeeByIdpost(@PathVariable Long id) {
-      
+
         return employeeService.getEmployeeById(id);
     }
 
     @GetMapping("/all")
-     public List<Employee> getAllEmployee() {
-    return employeeService.getAllEmployee(); 
+    public List<Employee> getAllEmployee() {
+        return employeeService.getAllEmployee();
     }
 
     @PostMapping("/save")
@@ -39,8 +39,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/{empid}")
-    public Employee updateEmployee( @RequestBody Employee employee, @PathVariable Long empid) {
-        return employeeService.updateEmployee( employee,empid);
+    public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long empid) {
+        return employeeService.updateEmployee(employee, empid);
     }
 
     @DeleteMapping("/{id}")
@@ -48,4 +48,3 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
     }
 }
-

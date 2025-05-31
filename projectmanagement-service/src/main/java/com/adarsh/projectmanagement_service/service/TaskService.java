@@ -13,17 +13,14 @@ import com.adarsh.projectmanagement_service.dto.Task;
 @Service
 public class TaskService {
 
-  
   private final TaskDao taskDao;
   private final FeignclientmethodsEMS feignclientmethodsEMS;
 
   @Autowired
-public TaskService(TaskDao taskDao,FeignclientmethodsEMS feignclientmethodsEMS){
-  this.taskDao=taskDao;
-  this.feignclientmethodsEMS=feignclientmethodsEMS;
-}
-
-
+  public TaskService(TaskDao taskDao, FeignclientmethodsEMS feignclientmethodsEMS) {
+    this.taskDao = taskDao;
+    this.feignclientmethodsEMS = feignclientmethodsEMS;
+  }
 
   public Task createTask(Task task) {
     feignclientmethodsEMS.getEmployeeByIdpost(task.getEmpId())
@@ -44,7 +41,7 @@ public TaskService(TaskDao taskDao,FeignclientmethodsEMS feignclientmethodsEMS){
   }
 
   public List<Task> getalltasks() {
-return taskDao.getAllTasks();
+    return taskDao.getAllTasks();
   }
 
 }

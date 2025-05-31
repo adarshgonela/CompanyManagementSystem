@@ -21,15 +21,15 @@ public class EmployeeDao {
     }
 
     public Employee createEmployee(Employee employee) {
-        
+
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Employee employee,Long empid) {
-        
-        Employee existingEmployee= employeeRepository.findById(empid)
-        .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + empid));
-       
+    public Employee updateEmployee(Employee employee, Long empid) {
+
+        Employee existingEmployee = employeeRepository.findById(empid)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + empid));
+
         existingEmployee.setFirstName(employee.getFirstName());
         existingEmployee.setLastName(employee.getLastName());
         existingEmployee.setPhone(employee.getPhone());

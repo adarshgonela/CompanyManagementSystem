@@ -117,12 +117,12 @@ class LeaveServiceTest {
     @Test
     void findByEmployee_WhenEmployeeNotExists_ShouldReturnEmpty() {
         // Arrange
-        Long employeeId = 99L;
+        Long employeeId = 1L;
         when(leaveDao.findByEmployee(employeeId)).thenReturn(Optional.empty());
 
         // Act
         Optional<LeaveRequest> result = leaveService.findByEmployee(employeeId);
-
+System.out.println(result);
         // Assert
         assertFalse(result.isPresent());
         verify(leaveDao, times(1)).findByEmployee(employeeId);
