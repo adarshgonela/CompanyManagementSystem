@@ -32,7 +32,7 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/status/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
         Project updatedProject = projectService.updateProject(id, projectDetails);
         return ResponseEntity.ok(updatedProject);

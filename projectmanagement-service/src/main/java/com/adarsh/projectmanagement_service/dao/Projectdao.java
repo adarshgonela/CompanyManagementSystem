@@ -94,15 +94,8 @@ public Project createproject(Project project){
     }
 
     public Project removeEmployeeId(Long projectId, Long employeeId) {
-        // Check if the project exists
-        Optional<Project> projectOpt = projectrepo.findById(projectId);
-        if (!projectOpt.isPresent()) {
-            throw new RuntimeException("Project not found with id: " + projectId);
-        }
+        Project project = getProjectById(projectId);
 
-        Project project = projectOpt.get();
-
-        // Check if the employee ID exists before removing
         if (!project.getEmployeeIds().contains(employeeId)) {
             throw new RuntimeException("Employee ID " + employeeId + " is not associated with project " + projectId);
         }

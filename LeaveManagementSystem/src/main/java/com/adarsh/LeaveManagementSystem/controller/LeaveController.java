@@ -90,7 +90,6 @@ public class LeaveController {
         return service.requestleaveOrsaveleave(leaverequest);
     }
 
-
     @PutMapping("/update")
     public LeaveRequest updateleave(@RequestBody LeaveRequest leaverequest) {
         try {
@@ -104,25 +103,29 @@ public class LeaveController {
 
     @GetMapping("/all")
     public List<LeaveRequest> getallemployees() {
-    return   service.getallleave();
+        return service.getallleave();
     }
 
-
     @GetMapping("/leaveid/{employeeId}")
-    public  Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId){
-        return  service.findByEmployee(employeeId);
+    public Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId) {
+        return service.findByEmployee(employeeId);
     }
 
     @GetMapping("/test")
-    public  Optional<Employee> findByEmployee1(){
-        Optional<Employee>   o= employeeFeignController.getEmployeeByIdpost(7L);
+    public Optional<Employee> findByEmployee1() {
+        Optional<Employee> o = employeeFeignController.getEmployeeByIdpost(7L);
         System.out.println(o.get());
         return Optional.of(o.get());
     }
 
     @PatchMapping("/update-status/{id}")
     public LeaveRequest updatestatus(@PathVariable Long id, @RequestBody LeaveRequest leaveRequest) {
-   return service.updatestatus(id,leaveRequest);
+        return service.updatestatus(id, leaveRequest);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteLeave(@PathVariable Long id) {
+        service.deleteLeave(id);
     }
 
 }

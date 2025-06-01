@@ -58,4 +58,8 @@ public class LeaveDao {
         return null;
     }
 
+    public void deleteLeave(Long id) {
+         leaveRepo.deleteById(id);
+    }
+
 }
