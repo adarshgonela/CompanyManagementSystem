@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.prepost.PreAuthorize;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/ems")
@@ -51,7 +52,8 @@ public class Ems_lms_client {
 
 
     @GetMapping("/name")
-    private String nema(){
+    @PreAuthorize("hasRole('USER') ")
+    private String name(){
         return " i am adarsh";
     }
 }
