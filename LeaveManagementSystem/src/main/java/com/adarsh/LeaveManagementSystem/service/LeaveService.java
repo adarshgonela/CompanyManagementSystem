@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.adarsh.LeaveManagementSystem.dao.LeaveDao;
 import com.adarsh.LeaveManagementSystem.dto.LeaveRequest;
 
+import jakarta.ws.rs.NotFoundException;
+
 @Service
 public class LeaveService {
     @Autowired
@@ -44,6 +46,12 @@ public class LeaveService {
 
     @CacheEvict(value = "leaves", key = "#id")
     public void deleteLeave(Long id) {
-        dao.deleteLeave(id); // Ensure this method exists in DAO
+        if (id >0) {
+                dao.deleteLeave(id); // Ensure this method exists in DAO
+   
+        }else{
+            throw new NotFoundException(" the id you are trying is not found to delete");
+        }
+    
     }
 }

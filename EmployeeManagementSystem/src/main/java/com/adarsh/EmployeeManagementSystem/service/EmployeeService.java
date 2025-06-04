@@ -21,10 +21,15 @@ public class EmployeeService {
 private static final String CACHE_NAME = "employees";
 
 @Cacheable(value = CACHE_NAME, key = "#id")
-    public Optional<Employee> getEmployeeById(Long id) {
-        return dao.getEmployeeById(id);
+   public Optional<Employee> getEmployeeById(Long id) {
+    Optional<Employee> employee = dao.getEmployeeById(id);
+    employee.ifPresentOrElse(
+        emp -> System.out.println("Employee found: " + emp),
+        () -> System.err.println("Employee with ID " + id + " not found")
+    );
+    return employee;
+}
 
-    }
  @CachePut(value = CACHE_NAME, key = "#employee.id")
     public Employee createEmployee(Employee employee) {
 
