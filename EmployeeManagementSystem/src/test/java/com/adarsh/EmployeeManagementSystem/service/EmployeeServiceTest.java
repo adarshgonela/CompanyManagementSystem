@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,25 +85,32 @@ class EmployeeServiceTest {
         verify(dao, times(1)).createEmployee(newEmployee);
     }
 
-    @Test
-    void updateEmployee_WhenEmployeeExists_ShouldReturnUpdatedEmployee() {
-        // Arrange
-        Long employeeId = 1L;
-        Employee updatedDetails = createTestEmployee(null, "New", "Name", "HR");
-        Employee expectedUpdatedEmployee = createTestEmployee(employeeId, "New", "Name", "HR");
-    
-        when(dao.updateEmployee(updatedDetails, employeeId)).thenReturn(expectedUpdatedEmployee);
-    
-        // Act
-        Employee result = employeeService.updateEmployee(updatedDetails, employeeId);
-    
-        // Assert
-        assertEquals(employeeId, result.getId());
-        assertEquals("New", result.getFirstName());
-        assertEquals("Name", result.getLastName());
-        assertEquals("HR", result.getDepartment());
-        verify(dao, times(1)).updateEmployee(updatedDetails, employeeId);
-    }
+   @Test
+void updateEmployee_WhenEmployeeExists_ShouldReturnUpdatedEmployee() {
+    Long employeeId = 1L;
+
+    Employee updatedDetails = createTestEmployee(null, "New", "Name", "HR");
+    Employee existingEmployee = createTestEmployee(employeeId, "Old", "Name", "Finance");
+    Employee expectedUpdatedEmployee = createTestEmployee(employeeId, "New", "Name", "HR");
+
+    // Ensure employee exists
+    when(dao.getEmployeeById(employeeId)).thenReturn(Optional.of(existingEmployee));
+
+    // Setup update behavior
+    when(dao.updateEmployee(any(Employee.class), eq(employeeId))).thenReturn(expectedUpdatedEmployee);
+
+    // Act
+    Employee result = employeeService.updateEmployee(updatedDetails, employeeId);
+
+    // Assert
+    assertNotNull(result, "Employee result should not be null");
+    assertEquals(employeeId, result.getId());
+    assertEquals("New", result.getFirstName());
+    assertEquals("Name", result.getLastName());
+    assertEquals("HR", result.getDepartment());
+
+    verify(dao, times(1)).updateEmployee(any(Employee.class), eq(employeeId));
+}
 
     @Test
     void deleteEmployee_ShouldCallDaoDelete() {

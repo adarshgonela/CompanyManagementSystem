@@ -32,6 +32,7 @@ public class ProjectService {
     @Cacheable(value = "allProjects")
     public List<Project> getAllProjects() {
         return projectdao.getAllProjects();
+        
     }
 
     @Transactional(readOnly = true)

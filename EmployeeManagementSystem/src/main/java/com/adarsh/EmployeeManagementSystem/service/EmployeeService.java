@@ -18,34 +18,52 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeDao dao;
-private static final String CACHE_NAME = "employees";
+    private static final String CACHE_NAME = "employees";
 
-@Cacheable(value = CACHE_NAME, key = "#id")
-   public Optional<Employee> getEmployeeById(Long id) {
-    Optional<Employee> employee = dao.getEmployeeById(id);
-    employee.ifPresentOrElse(
-        emp -> System.out.println("Employee found: " + emp),
-        () -> System.err.println("Employee with ID " + id + " not found")
-    );
-    return employee;
-}
+    @Cacheable(value = CACHE_NAME, key = "#id")
+    public Optional<Employee> getEmployeeById(Long id) {
+        Optional<Employee> employee = dao.getEmployeeById(id);
+        employee.ifPresentOrElse(
+                emp -> System.out.println("Employee found: " + emp),
+                () -> System.err.println("Employee with ID " + id + " not found"));
+        return employee;
+    }
 
- @CachePut(value = CACHE_NAME, key = "#employee.id")
+    @CachePut(value = CACHE_NAME, key = "#employee.id")
     public Employee createEmployee(Employee employee) {
+        Employee createdEmployee = dao.createEmployee(employee);
+        System.out.println("Employee created: " + createdEmployee);
+        return createdEmployee;
+    }
 
-        return dao.createEmployee(employee);
-    }
-@CachePut(value = CACHE_NAME, key = "#empid")
+    @CachePut(value = CACHE_NAME, key = "#empid")
     public Employee updateEmployee(Employee employee, Long empid) {
-        return dao.updateEmployee(employee, empid);
+        Optional<Employee> existingEmployee = dao.getEmployeeById(empid);
+        if (existingEmployee.isPresent()) {
+            Employee updatedEmployee = dao.updateEmployee(employee, empid);
+            System.out.println("Employee updated: " + updatedEmployee);
+            return updatedEmployee;
+        } else {
+            System.err.println("Employee with ID " + empid + " not found for update.");
+            return null; // or throw an exception
+        }
     }
-@CacheEvict(value = CACHE_NAME, key = "#id")
+
+    @CacheEvict(value = CACHE_NAME, key = "#id")
     public void deleteEmployee(Long id) {
         dao.deleteEmployee(id);
+        System.out.println("Employee with ID " + id + " has been deleted.");
     }
-@Cacheable(value = CACHE_NAME, key = "'allEmployees'")
+
+    @Cacheable(value = CACHE_NAME, key = "'allEmployees'")
     public List<Employee> getAllEmployee() {
-        return dao.getAllEmployee();
+        List<Employee> employees = dao.getAllEmployee();
+        if (employees.isEmpty()) {
+            System.out.println("No employees found.");
+        } else {
+            System.out.println("All employees retrieved: " + employees);
+        }
+        return employees;
     }
 
 }

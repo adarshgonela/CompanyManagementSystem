@@ -26,17 +26,29 @@ public class LeaveService {
 
     @Cacheable(value = "allleaves")
     public List<LeaveRequest> getallleave() {
-        return dao.getallleave();
+        List<LeaveRequest> leaves = dao.getallleave();
+        leaves.forEach(leave -> System.out.println("Leave Request: " + leave)); 
+        return leaves;
+
     }
 
     @CachePut(value = "leaves", key = "#leaverequest.id")
     public LeaveRequest updateleave(LeaveRequest leaverequest) {
+        if (leaverequest.getLeaveRequestId() == null) {
+            throw new NotFoundException("Leave request ID is required for update");
+        }
+        
         return dao.updateLeave(leaverequest);
     }
 
     @Cacheable(value = "leaveByEmployee", key = "#employeeId")
     public Optional<LeaveRequest> findByEmployee(Long employeeId) {
-        return dao.findByEmployee(employeeId);
+        Optional<LeaveRequest> employees= dao.findByEmployee(employeeId);
+        employees.ifPresentOrElse(
+            emp -> System.out.println("Leave request found: " + emp),
+            () -> System.err.println("Leave request for employee ID " + employeeId + " not found")
+        );
+        return employees;
     }
 
     @CachePut(value = "leaves", key = "#id")
