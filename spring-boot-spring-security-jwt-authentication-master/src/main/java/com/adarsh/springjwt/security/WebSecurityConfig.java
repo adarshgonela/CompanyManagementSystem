@@ -1,5 +1,7 @@
 package com.adarsh.springjwt.security;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,23 +83,44 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 //    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 //  }
   
-  @SuppressWarnings("removal")
+//   @SuppressWarnings("removal")
+//   @Bean
+//   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//     http.cors().and().csrf(csrf -> csrf.disable())
+//         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+//         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//         .authorizeHttpRequests(auth -> 
+//           auth.requestMatchers("/api/auth/**").permitAll()
+//           .requestMatchers("/ems/**").permitAll()
+//           .requestMatchers("/api/test/**").permitAll()
+// //              .requestMatchers("/api/test/**").permitAll()
+//                   // .requestMatchers("http://localhost:8765/VIJAYALAKSHMISAREESSPRINGBOOT/sarees/*").permitAll()
+//               .anyRequest().authenticated()
+//         );
+    
+//     http.authenticationProvider(authenticationProvider());
+
+//     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    
+//     return http.build();
+//   }
+
+
+
+ @SuppressWarnings("removal")//new code changed on 6/6/25
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors().and().csrf(csrf -> csrf.disable())
-        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> 
-          auth.requestMatchers("/api/auth/**").permitAll()
-          .requestMatchers("/ems/**").permitAll()
-          .requestMatchers("/api/test/**").permitAll()
-
-
+     http.cors(withDefaults()).csrf(csrf -> csrf.disable())
+             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+             .authorizeHttpRequests(auth ->
+                     auth.requestMatchers("/api/auth/**").permitAll()
+                             .requestMatchers("/ems/**").permitAll()
+                             .requestMatchers("/api/test/**").permitAll()
 //              .requestMatchers("/api/test/**").permitAll()
-                  // .requestMatchers("http://localhost:8765/VIJAYALAKSHMISAREESSPRINGBOOT/sarees/*").permitAll()
-
-              .anyRequest().authenticated()
-        );
+                             // .requestMatchers("http://localhost:8765/VIJAYALAKSHMISAREESSPRINGBOOT/sarees/*").permitAll()
+                             .anyRequest().authenticated()
+             );
     
     http.authenticationProvider(authenticationProvider());
 
