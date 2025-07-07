@@ -9,9 +9,14 @@ import org.springframework.stereotype.Repository;
 import com.adarsh.LeaveManagementSystem.dto.LeaveRequest;
 import com.adarsh.LeaveManagementSystem.repo.LeaveRepo;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 @Repository
 public class LeaveDao {
 
+    @PersistenceContext
+    private  EntityManager entityManager;
     @Autowired
     private LeaveRepo leaveRepo;
 
@@ -61,5 +66,15 @@ public class LeaveDao {
     public void deleteLeave(Long id) {
          leaveRepo.deleteById(id);
     }
+
+    public List<LeaveRequest> getPaginatedLeaves(int pageNumber, int pageSize) {
+    int offset = (pageNumber - 1) * pageSize;
+
+    return entityManager.createQuery("SELECT l FROM LeaveRequest l ORDER BY l.id", LeaveRequest.class)
+                        .setFirstResult(offset)
+                        .setMaxResults(pageSize)
+                        .getResultList();
+}
+
 
 }

@@ -4,6 +4,9 @@ import com.adarsh.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 import com.adarsh.EmployeeManagementSystem.Repo.EmployeeRepository;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -47,5 +50,17 @@ public class EmployeeDao {
     public List<Employee> getAllEmployee() {
         return employeeRepository.findAll();
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public List<Employee> getEmployees(int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+
+        return entityManager.createQuery("SELECT e FROM Employee e ORDER BY e.id", Employee.class)
+                            .setFirstResult(offset)
+                        .setMaxResults(pageSize)
+                        .getResultList();
+}
 
 }

@@ -65,5 +65,19 @@ public class EmployeeService {
         }
         return employees;
     }
+    
+    @Cacheable(value = CACHE_NAME, key = "'employeesPage_' + #pageNumber + '_' + #pageSize")
+public List<Employee> getEmployees(int pageNumber, int pageSize) {
+    List<Employee> employees = dao.getEmployees(pageNumber, pageSize);
+
+    if (employees.isEmpty()) {
+        System.out.println("No employees found for page " + pageNumber);
+    } else {
+        System.out.println("Employees on page " + pageNumber + ": " + employees);
+    }
+
+    return employees;
+}
+
 
 }

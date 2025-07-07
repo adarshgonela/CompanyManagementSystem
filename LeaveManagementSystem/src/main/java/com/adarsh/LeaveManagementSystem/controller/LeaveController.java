@@ -8,6 +8,7 @@ import com.adarsh.LeaveManagementSystem.refDto.Employee;
 import com.adarsh.LeaveManagementSystem.service.LeaveService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -127,5 +128,22 @@ public class LeaveController {
     public void deleteLeave(@PathVariable Long id) {
         service.deleteLeave(id);
     }
+@GetMapping("/leavespagination")
+public ResponseEntity<List<LeaveRequest>> getLeaves(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "2") int size) {
+
+    if (page < 1 || size < 1) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    List<LeaveRequest> leaves = service.getPaginatedLeaves(page, size);
+
+    if (leaves.isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(leaves);
+}
 
 }

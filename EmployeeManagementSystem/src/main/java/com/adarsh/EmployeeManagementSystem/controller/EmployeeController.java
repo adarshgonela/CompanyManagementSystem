@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,4 +48,22 @@ public class EmployeeController {
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
     }
+      @GetMapping
+    public ResponseEntity<List<Employee>> getEmployees(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        if (page < 1 || size < 1) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Employee> employees = employeeService.getEmployees(page, size);
+
+        if (employees.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(employees);
+    }
+
 }
