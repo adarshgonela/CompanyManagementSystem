@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.adarsh.EmployeeManagementSystem.Exceptions.EmployeeFound;
 import com.adarsh.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 @ControllerAdvice
-
 public class GlobalExceptions {
    @ExceptionHandler(EmployeeFound.class)
     public ResponseEntity<String> handleLeaveRequestNotFoundException(EmployeeFound ex) {
