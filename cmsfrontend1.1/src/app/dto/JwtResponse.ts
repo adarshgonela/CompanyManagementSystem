@@ -1,8 +1,8 @@
 export interface JwtResponse {
-    id: number;
-    username: string;
-    email: string;
-    roles: string[];
-    tokenType: string;
-    accessToken: string;
+    token: string;
+  type: string;
+  id: number;
+  username: string;
+  email: string;
+  roles: string[];
   }

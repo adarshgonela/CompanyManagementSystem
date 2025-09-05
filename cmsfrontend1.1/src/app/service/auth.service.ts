@@ -1,39 +1,94 @@
-import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { JwtResponse } from '../dto/JwtResponse';
+import { catchError, tap } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8765/SPRINGSECURITY/api/auth/signin'; // Replace with your backend API URL
-  private userSignal = signal<JwtResponse | null>(null); // Signal to store user details
-  public user = this.userSignal.asReadonly(); // Expose a read-only signal
+  private apiUrl = 'http://localhost:9000/api/auth';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {}
 
-  login(username: string, password: string): Observable<JwtResponse> {
-    return this.http.post<JwtResponse>(this.loginUrl, { username, password }).pipe(
-      tap((response) => {
-        if (response && response.accessToken) {
-          localStorage.setItem('token', response.accessToken); // Store the JWT token in local storage
-          this.userSignal.set(response); // Update user signal
-          this.router.navigate(['/dashboard']); // Redirect to DashboardComponent on successful login
-        }
-      })
-    );
-  }
-
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
-  }
+ login(username: string, password: string): Observable<JwtResponse> {
+  const loginRequest: LoginRequest = { username, password };
+  
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+  
+  console.log('Auth service: Sending login request', loginRequest);
+  
+  return this.http.post<JwtResponse>(`${this.apiUrl}/signin`, loginRequest, httpOptions).pipe(
+    tap(response => {
+      console.log('Auth service: Login successful', response);
+    }),
+    catchError(this.handleError)
+  );
+}
 
   logout(): void {
-    localStorage.removeItem('token');
-    this.userSignal.set(null); // Clear user signal
+    if (this.isBrowser()) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+    }
     this.router.navigate(['/login']);
   }
 
+  isLoggedIn(): boolean {
+    if (this.isBrowser()) {
+      return !!localStorage.getItem('authToken');
+    }
+    return false;
+  }
+
+  getToken(): string | null {
+    if (this.isBrowser()) {
+      return localStorage.getItem('authToken');
+    }
+    return null;
+  }
+
+  getUser(): any {
+    if (this.isBrowser()) {
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
+    }
+    return null;
+  }
+
+  checkSession(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/checkSession`);
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.message || error.statusText || 'Server error';
+    }
+    
+    return throwError(() => new Error(errorMessage));
+  }
+}
+
+interface LoginRequest {
+  username: string;
+  password: string;
 }

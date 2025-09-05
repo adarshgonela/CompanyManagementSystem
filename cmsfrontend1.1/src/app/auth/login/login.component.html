@@ -42,42 +42,66 @@
                 <!-- Form -->
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                   <div class="form-group">
+                    <label for="username">Username</label>
                     <input
-                      class="form-control"
                       type="text"
+                      id="username"
                       formControlName="username"
-                      placeholder="Username"
-                    />
-                    @if (loginForm.get('username')?.invalid &&
-                    loginForm.get('username')?.touched) {
-                    <div class="text-danger">
-                      Please enter a valid username.
-                    </div>
-                    }
-                  </div>
-                  <div class="form-group">
-                    <input
                       class="form-control"
-                      type="password"
-                      formControlName="password"
-                      placeholder="Password"
+                      [class.is-invalid]="
+                        username?.invalid && username?.touched
+                      "
                     />
-                    @if (loginForm.get('password')?.invalid &&
-                    loginForm.get('password')?.touched) {
-                    <div class="text-danger">
-                      Password must be at least 6 characters long.
-                    </div>
-                    }
-                  </div>
-                  <div class="form-group">
-                    <button
-                      class="btn btn-theme button-1 text-white ctm-border-radius btn-block"
-                      type="submit"
-                      [disabled]="loginForm.invalid"
+
+                    <div
+                      *ngIf="username?.invalid && username?.touched"
+                      class="error-message"
                     >
-                      Login
-                    </button>
+                      <div *ngIf="username?.errors?.['required']">
+                        Username is required
+                      </div>
+                      <div *ngIf="username?.errors?.['minlength']">
+                        Username must be at least 3 characters
+                      </div>
+                    </div>
                   </div>
+
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      formControlName="password"
+                      class="form-control"
+                      [class.is-invalid]="
+                        password?.invalid && password?.touched
+                      "
+                    />
+
+                    <div
+                      *ngIf="password?.invalid && password?.touched"
+                      class="error-message"
+                    >
+                      <div *ngIf="password?.errors?.['required']">
+                        Password is required
+                      </div>
+                      <div *ngIf="password?.errors?.['minlength']">
+                        Password must be at least 6 characters
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div *ngIf="errorMessage" class="alert alert-error">
+                    {{ errorMessage }}
+                  </div> -->
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    [disabled]="isLoading || loginForm.invalid"
+                  >
+                    {{ isLoading ? "Logging in..." : "Login" }}
+                  </button>
                 </form>
                 <!-- /Form -->
 

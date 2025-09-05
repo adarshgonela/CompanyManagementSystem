@@ -4,9 +4,8 @@ import com.adarsh.EmployeeManagementSystem.dto.Employee;
 import com.adarsh.EmployeeManagementSystem.service.EmployeeService;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,42 +13,55 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @GetMapping("/{id}")
-    public Optional<Employee> getEmployeeById(@PathVariable Long id) {
-
-        return employeeService.getEmployeeById(id);
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-    @PostMapping("/post/{id}")
-    public Optional<Employee> getEmployeeByIdpost(@PathVariable Long id) {
-
-        return employeeService.getEmployeeById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
-    public List<Employee> getAllEmployee() {
-        return employeeService.getAllEmployee();
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> employees = employeeService.getAllEmployee();
+        if (employees.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(employees);
     }
 
-    @PostMapping("/save")
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+    @PostMapping
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        Employee created = employeeService.createEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping("/{empid}")
-    public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long empid) {
-        return employeeService.updateEmployee(employee, empid);
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        Employee updated = employeeService.updateEmployee(employee, id);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        boolean deleted = employeeService.deleteEmployee(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-      @GetMapping
-    public ResponseEntity<List<Employee>> getEmployees(
+
+    @GetMapping
+    public ResponseEntity<List<Employee>> getPaginatedEmployees(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
@@ -58,12 +70,11 @@ public class EmployeeController {
         }
 
         List<Employee> employees = employeeService.getEmployees(page, size);
-
         if (employees.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(employees);
     }
-
+  
 }
