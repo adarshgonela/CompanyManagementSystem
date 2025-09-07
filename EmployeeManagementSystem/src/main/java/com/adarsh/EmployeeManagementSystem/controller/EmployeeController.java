@@ -3,6 +3,7 @@ package com.adarsh.EmployeeManagementSystem.controller;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 import com.adarsh.EmployeeManagementSystem.service.EmployeeService;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")  // Enable CORS for this controller
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
@@ -26,13 +28,22 @@ public class EmployeeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
+    // @GetMapping("/all")
+    // public ResponseEntity<List<Employee>> getAllEmployees() {
+    //     List<Employee> employees = employeeService.getAllEmployee();
+    //     if (employees.isEmpty()) {
+    //         return ResponseEntity.noContent().build();
+    //     }
+    //     return ResponseEntity.ok(employees);
+    // }
+
+       @GetMapping("/all")
+    public List<Employee> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployee();
         if (employees.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return Collections.emptyList();
         }
-        return ResponseEntity.ok(employees);
+        return employees;
     }
 
     @PostMapping

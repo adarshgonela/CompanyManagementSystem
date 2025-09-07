@@ -5,11 +5,13 @@ import { RegisterComponent } from './auth/register/register.component';
 import { SidebarComponent } from './common/sidebar/sidebar.component';
 import { LeaveformComponent } from './employee/leaveform/leaveform.component';
 import { TestComponent } from './test/test.component';
+import { EmpdashboardComponent } from './employee/empdashboard/empdashboard.component';
+import { DetailsfetchComponent } from './testing/detailsfetch/detailsfetch.component';
 
 export const routes: Routes = [
     {
-        path:'empdashboard',
-        component:DashboardComponent
+        path:'',
+        component:LoginComponent
     },
     {
         path:'login',
@@ -32,12 +34,14 @@ export const routes: Routes = [
         path:'leaveform',
         component:LeaveformComponent
     },
-    {
-        path:'test/:employeeId',component:TestComponent
-    },
-    {
-        path:'test',component:TestComponent
-    },
+   {
+    path:'empdashboard/:id',
+    component:DetailsfetchComponent
+   },
+   {
+    path:'empdashboard',
+    component:DetailsfetchComponent
+   }
     // { path: '', redirectTo: '/login', pathMatch: 'full' },
     // { path: '**', redirectTo: '/login' },
     // { path: 'leave/:employeeId', component: LeaveformComponent }

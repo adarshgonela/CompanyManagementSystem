@@ -39,7 +39,7 @@ import com.adarsh.springjwt.repository.UserRepository;
 import com.adarsh.springjwt.security.jwt.JwtUtils;
 import com.adarsh.springjwt.security.services.UserDetailsImpl;
 
-// @CrossOrigin(origins = "http://localhost:4200")  // Enable CORS for this controller
+@CrossOrigin(origins = "http://localhost:4200")  // Enable CORS for this controller
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
