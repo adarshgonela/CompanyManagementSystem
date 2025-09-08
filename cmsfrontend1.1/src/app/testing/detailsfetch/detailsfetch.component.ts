@@ -16,6 +16,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 })
 export class DetailsfetchComponent {
   employees: Employee[] = [];
+  //  employees: Employee | null = null;
   isLoading = false;
   error: string | null = null;
   employeeId: number | null = null;
@@ -27,46 +28,63 @@ export class DetailsfetchComponent {
   ) {}
 
   ngOnInit(): void {
-    // this.route.paramMap.subscribe(params => {
-    //   const id = 1;
-    //   // const id = params.get('id');
-    //   if (id) {
-    //     this.employeeId = Number(id);
-    //     if (!isNaN(this.employeeId)) {
-    //       this.loadEmployee(this.employeeId);
-    //     } else {
-    //       this.error = 'Invalid employee ID in URL';
-    //     }
-    //   }
-    // }
-    // );
-    this.getallemployees();
+    this.loadEmployeeFromUrl();
+    
   }
 
-  // loadEmployee(id: number): void {
-  //   this.isLoading = true;
-  //   this.error = null;
+  
+////////////////////////////////////////////////////////////////
 
-  //   this.employeeService.getEmployeeById(id).subscribe({
-  //     next: (employee) => {
-  //       this.employees.push(employee);
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       this.error = 'Employee not found';
-  //       this.isLoading = false;
-  //       console.error('Error fetching employee:', error);
-  //     },
-  //   });
-  // }
+ loadEmployeeFromUrl(): void {
+    this.isLoading = true;
+    this.error = null;
 
-  // goBack(): void {
-  //   this.router.navigate(['/employees']);
-  // }
-  getallemployees(): void {
-  this.employeeService.getAllEmployees().subscribe(
-    (data: Employee[]) => (
-      this.employees = data),(error:any)=>(this.error='data not found')
-  );
-}
+    // Get ID from route parameters
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      
+      if (id) {
+        const employeeId = Number(id);
+        
+        if (isNaN(employeeId)) {
+          this.error = 'Invalid employee ID';
+          this.isLoading = false;
+          return;
+        }
+
+        this.getEmployeeById(employeeId);
+      } else {
+        this.error = 'No employee ID provided';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Method to fetch employee by ID
+  getEmployeeById(id: number): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.employeeService.getEmployeeById(id).subscribe({
+      next: (data: Employee) => {
+        this.employees = [data]; // Wrap the single employee in an array
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        this.error = 'Employee not found';
+        this.isLoading = false;
+        console.error('Error fetching employee:', error);
+      }
+    });
+  }
+
+  // Method to reload the same employee
+  loadEmployee(id: number): void {
+    this.getEmployeeById(id);
+  }
+
+  // Navigate back to employee list
+  goBack(): void {
+    this.router.navigate(['/employees']);
+  }
 }

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarComponent } from "../../common/sidebar/sidebar.component";
-import { NavbarComponent } from "../../common/navbar/navbar.component";
+import { SidebarComponent } from '../../common/sidebar/sidebar.component';
+import { NavbarComponent } from '../../common/navbar/navbar.component';
 import { EmpdetailsService } from '../../service/employee/empdetails.service';
 import { Employee } from '../../dto/Employee';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-empdashboard',
   standalone: true,
@@ -15,7 +15,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router'
   styleUrls: ['./empdashboard.component.css']
 })
 export class EmpdashboardComponent implements OnInit {
-employee: Employee | null = null;
+  employees: Employee[] = [];
+  //  employees: Employee | null = null;
   isLoading = false;
   error: string | null = null;
   employeeId: number | null = null;
@@ -24,32 +25,52 @@ employee: Employee | null = null;
     private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmpdetailsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    this.loadEmployeeFromUrl();
+    
+  }
+
+  
+////////////////////////////////////////////////////////////////
+
+ loadEmployeeFromUrl(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    // Get ID from route parameters
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
+      
       if (id) {
-        this.employeeId = Number(id);
-        if (!isNaN(this.employeeId)) {
-          this.loadEmployee(this.employeeId);
-        } else {
-          this.error = 'Invalid employee ID in URL';
+        const employeeId = Number(id);
+        
+        if (isNaN(employeeId)) {
+          this.error = 'Invalid employee ID';
+          this.isLoading = false;
+          return;
         }
+
+        this.getEmployeeById(employeeId);
+      } else {
+        this.error = 'No employee ID provided';
+        this.isLoading = false;
       }
     });
   }
 
-  loadEmployee(id: number): void {
+  // Method to fetch employee by ID
+  getEmployeeById(id: number): void {
     this.isLoading = true;
     this.error = null;
 
     this.employeeService.getEmployeeById(id).subscribe({
-      next: (employee) => {
-        this.employee = employee;
+      next: (data: Employee) => {
+        this.employees = [data]; // Wrap the single employee in an array
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.error = 'Employee not found';
         this.isLoading = false;
         console.error('Error fetching employee:', error);
@@ -57,6 +78,12 @@ employee: Employee | null = null;
     });
   }
 
+  // Method to reload the same employee
+  loadEmployee(id: number): void {
+    this.getEmployeeById(id);
+  }
+
+  // Navigate back to employee list
   goBack(): void {
     this.router.navigate(['/employees']);
   }

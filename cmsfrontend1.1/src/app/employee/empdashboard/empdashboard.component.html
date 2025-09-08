@@ -71,8 +71,12 @@
 											<img src="src/assets/img/profiles/img-6.jpg" alt="User Avatar" class="img-fluid rounded-circle" width="100">
 										</div>
 										<div class="user-details">
-											<h4><b>Welcome {{ employee?.firstName }}</b></h4>
+											@for(emp of employees; track emp.id) {
+
+
+											<h4><b>Welcome {{emp.firstName}}</b></h4>
 											<p>Sun, 29 Nov 2019</p>
+											}
 										</div>
 									</div>
 								</div>

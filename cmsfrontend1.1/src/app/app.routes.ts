@@ -36,10 +36,17 @@ export const routes: Routes = [
     },
    {
     path:'empdashboard/:id',
-    component:DetailsfetchComponent
+    component:EmpdashboardComponent
    },
    {
     path:'empdashboard',
+    component:EmpdashboardComponent
+   },   {
+    path:'e/:id',
+    component:DetailsfetchComponent
+   },
+   {
+    path:'e',
     component:DetailsfetchComponent
    }
     // { path: '', redirectTo: '/login', pathMatch: 'full' },
