@@ -7,10 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FooterComponent } from "../../common/footer/footer.component";
+import { HeaderComponent } from "../../common/header/header.component";
 @Component({
   selector: 'app-empdashboard',
   standalone: true,
-  imports: [SidebarComponent, NavbarComponent,CommonModule, FormsModule, RouterModule],
+  imports: [SidebarComponent, NavbarComponent, CommonModule, FormsModule, RouterModule, FooterComponent, HeaderComponent],
   templateUrl: './empdashboard.component.html',
   styleUrls: ['./empdashboard.component.css']
 })
@@ -33,7 +35,7 @@ export class EmpdashboardComponent implements OnInit {
   }
 
   
-////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
  loadEmployeeFromUrl(): void {
     this.isLoading = true;

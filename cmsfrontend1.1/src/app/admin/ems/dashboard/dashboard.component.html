@@ -4,27 +4,10 @@
 <!-- Mirrored from dleohr.dreamstechnologies.com/template-1/dleohr-vertical/employees-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Dec 2024 03:18:04 GMT -->
 <head>
 	
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<app-header></app-header>
 		
-		<!-- Favicon -->
-		<link rel="icon" type="image/x-icon" href="../../../../assets/img/favicon.png">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="../../../../assets/css/bootstrap.min.css">
-		
-		<!-- Linearicon Font -->
-		<link rel="stylesheet" href="../../../../assets/css/lnr-icon.css">
-				
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="../../../../assets/css/font-awesome.min.css">
-				
-		<!-- Custom CSS -->
-		<link rel="stylesheet" href="../../../../assets/css/style.css">
-		
-		<title>index Page</title>
-		
+		<title>Admin Dashboard</title>
+	
 	</head>
 	<body>
 			
@@ -64,11 +47,17 @@
 								<div class="user-card card shadow-sm bg-white text-center ctm-border-radius grow">
 									<div class="user-info card-body">
 										<div class="user-avatar mb-4">
-											<img src="assets/img/profiles/img-6.jpg" alt="User Avatar" class="img-fluid rounded-circle" width="100">
+											<!-- <img src="src/assets/img/profiles/img-6.jpg" alt="User Avatar" class="img-fluid rounded-circle" width="100"> -->
+										<img src="assets/img/profiles/img-6.jpg" alt="User Avatar" class="img-fluid rounded-circle" width="100">
+										
 										</div>
 										<div class="user-details">
-											<h4><b>Welcome Maria</b></h4>
+											@for(emp of employees; track emp.id) {
+
+
+											<h4><b>Welcome {{emp.firstName}}</b></h4>
 											<p>Sun, 29 Nov 2019</p>
+											}
 										</div>
 									</div>
 								</div>
@@ -412,19 +401,9 @@
 		<div class="sidebar-overlay" id="sidebar_overlay"></div>
 			
 		<!-- jQuery -->
-		<script src="../../../../assets/js/jquery-3.2.1.min.js" type="619642e8067b2605b6e0feac-text/javascript"></script>
 		
-		<!-- Bootstrap Core JS -->
-		<script src="../../../../assets/js/popper.min.js" type="619642e8067b2605b6e0feac-text/javascript"></script>
-		<script src="../../../../assets/js/bootstrap.min.js" type="619642e8067b2605b6e0feac-text/javascript"></script>		
-		
-		<!-- Sticky sidebar JS -->
-		<script src="../../../../assets/plugins/theia-sticky-sidebar/ResizeSensor.js" type="619642e8067b2605b6e0feac-text/javascript"></script>		
-		<script src="../../../../assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js" type="619642e8067b2605b6e0feac-text/javascript"></script>		
-			
-		<!-- Custom Js -->
-		<script src="../../../../assets/js/script.js" type="619642e8067b2605b6e0feac-text/javascript"></script>
+	<app-footer></app-footer>
 
-	<script src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="619642e8067b2605b6e0feac-|49" defer></script></body>
+</body>
 
 </html>

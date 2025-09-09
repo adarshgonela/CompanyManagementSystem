@@ -1,3 +1,13 @@
 1.HttpClient issue --> provideHttpClient() in app.comfig.ts
 2. ngfor -->   imports: [CommonModule],
 3.forms --> import ReactiveFormsModule, CommonModule
+
+  "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets/",
+                "output": "/assets/"
+              }
+
+              CORS
+              
