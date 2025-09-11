@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  
-    <link rel="icon" type="image/x-icon" href="../../../assets/img/favicon.png">
-		
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../../assets/css/bootstrap.min.css">
-    
-    <!-- Linearicon Font -->
-    <link rel="stylesheet" href="../../../assets/css/lnr-icon.css">
-            
-    <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../../../assets/css/font-awesome.min.css">
-    
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../../assets/css/style.css">
- 
-</head>
-<body>
+
     	<!-- Header -->
 			<header class="header">
 			
@@ -67,8 +47,9 @@
 												</a>
 												
 												<!-- Notifications -->
+												 @for (emp of employees; track emp.id) {
 												<div class="dropdown-menu notification-dropdown-menu shadow-lg border-0 p-3 m-0 dropdown-menu-right">
-													<a class="dropdown-item p-2" href="employment.html">
+													<a class="dropdown-item p-2" href="profile/{{emp.id}}">
 														<span class="media align-items-center">
 															<span class="lnr lnr-user mr-3"></span>
 															<span class="media-body text-truncate">
@@ -76,6 +57,7 @@
 															</span>
 														</span>
 													</a>
+												
 													<a class="dropdown-item p-2" href="settings.html">
 														<span class="media align-items-center">
 															<span class="lnr lnr-cog mr-3"></span>
@@ -93,6 +75,7 @@
 														</span>
 													</a>
 												</div>
+											}
 												<!-- Notifications -->
 												
 											</div>
@@ -229,5 +212,3 @@
 			</header>		
 			<!-- /Header -->
     
-</body>
-</html>

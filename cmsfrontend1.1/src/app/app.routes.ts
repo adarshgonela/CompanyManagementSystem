@@ -32,7 +32,7 @@ export const routes: Routes = [
     }
     ,
     {
-        path:'leaveform',
+        path:'leave/:id',
         component:LeaveformComponent
     },
    {
@@ -51,7 +51,7 @@ export const routes: Routes = [
     component:DetailsfetchComponent
    },
      {
-    path:'profile',
+    path:'profile/:id',
     component:ProfileComponent
    }
 
