@@ -1,153 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
-	
-<!-- Mirrored from dleohr.dreamstechnologies.com/template-1/dleohr-vertical/employees-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Dec 2024 03:18:04 GMT -->
-<head>
-	<app-header></app-header>
-		
-		<title>Employee Dashboard</title>
-	
-	</head>
-	<body>
-			
-		
-		<!-- Inner wrapper -->
-		<div class="inner-wrapper">
-		
-		<app-navbar></app-navbar>
-			
-			<!-- Content -->
-            
-		  <div class="page-wrapper">
-            <div class="container-fluid">
+  <!-- Mirrored from dleohr.dreamstechnologies.com/template-1/dleohr-vertical/employees-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Dec 2024 03:18:04 GMT -->
+  <head>
+    <app-header></app-header>
+
+    <title>Employee Dashboard</title>
+  </head>
+  <body>
+    <!-- Inner wrapper -->
+    <div class="inner-wrapper">
+      <app-navbar></app-navbar>
+
+      <!-- Content -->
+
+      <div class="page-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-12 theiaStickySidebar">
+              <aside class="sidebar sidebar-user">
                 <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-md-12 theiaStickySidebar">
-                        <aside class="sidebar sidebar-user">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card ctm-border-radius shadow-sm grow">
-                                        <div class="card-body py-4">
-                                            <div class="row">
-                                                <div class="col-md-12 mr-auto text-left">
-                                                    <div class="custom-search input-group">
-                                                        <div class="custom-breadcrumb">
-                                                            <ol class="breadcrumb no-bg-color d-inline-block p-0 m-0 mb-2">
-                                                                <li class="breadcrumb-item d-inline-block"><a href="dashboard.php" class="text-dark">Home</a></li>
-                                                                <li class="breadcrumb-item d-inline-block active">Profile</li>
-                                                            </ol>
-                                                            <h4 class="text-dark">Profile</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <app-sidebar></app-sidebar>
-                        </aside>
-                    </div>
-
-                    <div class="col-xl-9 col-lg-8 col-md-12">
+                  <div class="col-md-12">
+                    <div class="card ctm-border-radius shadow-sm grow">
+                      <div class="card-body py-4">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="card ctm-border-radius shadow-sm grow">
-                                    <div class="card-header">
-                                        <h4 class="card-title mb-0">Profile</h4>
-                                    </div>
-                                    <div class="card-body">
-                                         @for(emp of employees; track emp.id) {
-                                        <form action="profile.php?id=<?php echo $id ?>" method="post" enctype="multipart/form-data">
-                                            <div class="col-12">
-                                                <div class="avatar-upload">
-                                                    <div class="avatar-edit">
-                                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="image"/>
-                                                        <label for="imageUpload"></label>
-                                                    </div>
-                                                    <div class="avatar-preview">
-                                                            <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" alt="No Profile Img" >
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-sm-6 leave-col">
-                                                    <div class="form-group">
-                                                        <label>Name</label>
-                                                        <input type="text" class="form-control" value="{{emp.lastName}}" name="name" >
-                                                    </div>
-                                                </div>  
-                                                <div class="col-sm-6 leave-col">
-                                                    <div class="form-group">
-                                                        <label>Email</label>
-                                                        <input type="text" class="form-control" value="{{emp.email}}" name="email" readonly>
-                                                    </div>
-                                                </div>  
-												<div class="col-sm-6">
-														<div class="form-group">
-															<label>
-																Gender
-																<span class="text-danger"></span>
-															</label>
-
-															<select class="form-control select" name="gender" value="<?php echo $gender; ?>" >
-																<option value=""><?php echo $gender ?></option>
-																<option value="Male">Male</option>
-																<option value="Female">Female</option>
-															</select>
-														</div>
-													</div>
-													
-                                                <div class="col-sm-6 leave-col">
-                                                    <div class="form-group">
-                                                        <label>Phone Number</label>
-                                                        <input type="text" class="form-control" value="{{emp.phone}}" name="phno">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 leave-col">
-                                                    <div class="form-group">
-                                                        <label>Roll Number</label>
-                                                        <input type="text" class="form-control" value="<?php echo $rollnumber ?>" name="rollnumber" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group mb-0">
-                                                        <label>Address</label>
-                                                        <input type="text" class="form-control" value="<?php echo $address ?>" name="address">
-                                                        <input type="hidden" name="update">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="text-center">
-                                                <button class="btn btn-theme button-1 text-white ctm-border-radius mt-4" type="submit">Update Details</button>
-                                                <a href="javascript:void(0);" class="btn btn-danger text-white ctm-border-radius mt-4">Cancel</a>
-                                            </div>
-                                        
-                                        </form>
-                                         }
-                                    </div>
-                                </div>
+                          <div class="col-md-12 mr-auto text-left">
+                            <div class="custom-search input-group">
+                              <div class="custom-breadcrumb">
+                                <ol
+                                  class="breadcrumb no-bg-color d-inline-block p-0 m-0 mb-2"
+                                >
+                                  <li class="breadcrumb-item d-inline-block">
+                                    <a href="dashboard.php" class="text-dark"
+                                      >Home</a
+                                    >
+                                  </li>
+                                  <li
+                                    class="breadcrumb-item d-inline-block active"
+                                  >
+                                    Profile
+                                  </li>
+                                </ol>
+                                <h4 class="text-dark">Profile</h4>
+                              </div>
                             </div>
+                          </div>
                         </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
+                <app-sidebar></app-sidebar>
+              </aside>
             </div>
-        </div>
-    
-			<!--/Content-->
-			
-		</div>
-		<!-- Inner Wrapper -->
-		
-		<div class="sidebar-overlay" id="sidebar_overlay"></div>
-			
-		<!-- jQuery -->
-		
-		<app-footer></app-footer>
-</body>
 
+            <div class="col-xl-9 col-lg-8 col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card ctm-border-radius shadow-sm grow">
+                    <div class="card-header">
+                      <h4 class="card-title mb-0">Profile</h4>
+                    </div>
+                    <div class="card-body">
+  @if (isLoading) {
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading employee data...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+  } @else if (!isLoading && employees.length > 0) {
+    <form
+      [formGroup]="employeeForm"
+      (ngSubmit)="updateEmployeeProfile()"
+      enctype="multipart/form-data"
+    >
+      <div class="col-12 mb-4">
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <label for="imageUpload"><i class="fas fa-camera"></i></label>
+          </div>
+          <div class="avatar-preview">
+            <img
+              [src]="
+                // selectedEmployee?.image ||
+                'assets/images/default-avatar.png'
+              "
+              alt="Profile Image"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedEmployee?.email"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-control" formControlName="gender">
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="phone"
+              placeholder="Enter phone number"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+          <div class="form-group">
+            <label class="form-label">Employee ID</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="selectedEmployee?.empid"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 mb-3">
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="address"
+              placeholder="Enter address"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button
+          type="submit"
+          class="btn btn-primary me-2"
+          [disabled]="isLoading || employeeForm.invalid"
+        >
+          @if (isLoading) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+          }
+          {{ isLoading ? "Updating..." : "Update Details" }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetForm()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  } @else {
+    <p>No employee data found. Please search for an employee.</p>
+  }
+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--/Content-->
+    </div>
+    <!-- Inner Wrapper -->
+
+    <div class="sidebar-overlay" id="sidebar_overlay"></div>
+
+    <!-- jQuery -->
+
+    <app-footer></app-footer>
+  </body>
 </html>

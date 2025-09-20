@@ -3,13 +3,16 @@ package com.adarsh.EmployeeManagementSystem.service;
 import com.adarsh.EmployeeManagementSystem.dao.EmployeeDao;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 @Service
@@ -99,4 +102,19 @@ public class EmployeeService {
         return employees;
     }
 
+    // public ResponseEntity<String> uploadProfilePic( Long id, MultipartFile file) throws IOException {
+    //     return dao.uploadProfilePic(id, file);}
+    // public ResponseEntity<byte[]> getProfilePic( Long id) {
+    //     return dao.getProfilePic(id);
+    // }
+
+    public ResponseEntity<String> uploadImage( MultipartFile file) throws IOException {
+    return dao.uploadImage(file);
+    }
+    public Employee getImage( String imageName) throws IOException {
+        return dao.getImage(imageName);
+    }
+public Optional<Employee> changeGender(Employee e,Long id){
+    return dao.changeGender(e, id);
+}
 }

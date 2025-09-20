@@ -1,5 +1,6 @@
 export interface Employee {
   id: number;
+  empid:number;
   firstName: string;
   lastName: string;
   email: string;
@@ -8,4 +9,6 @@ export interface Employee {
   position: string;
   hireDate: Date;
   roletype: string; // 'employee' | 'hr' | 'manager'
+  gender: string;
+  address: string;
 }

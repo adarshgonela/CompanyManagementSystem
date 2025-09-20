@@ -1,6 +1,5 @@
 package com.adarsh.springjwt.security;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

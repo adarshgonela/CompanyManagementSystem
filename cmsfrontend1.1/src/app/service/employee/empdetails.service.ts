@@ -53,5 +53,9 @@ export class EmpdetailsService {
     
     return this.http.get<Employee[]>(this.apiUrl, { params });
   }
-
+ 
+   changeEmployeeProfile(id: number, employee: Employee): Observable<Employee> {
+    const url = `${this.apiUrl}/change-profile/${id}`;
+    return this.http.put<Employee>(url, employee);
+  }
 }
