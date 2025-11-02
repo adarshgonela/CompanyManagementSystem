@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Mirrored from dleohr.dreamstechnologies.com/template-1/dleohr-vertical/employees-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Dec 2024 03:18:04 GMT -->
   <head>
     <app-header></app-header>
-
-    <title>Employee Dashboard</title>
+    <title>Employee Profile</title>
   </head>
   <body>
     <!-- Inner wrapper -->
@@ -12,7 +10,6 @@
       <app-navbar></app-navbar>
 
       <!-- Content -->
-
       <div class="page-wrapper">
         <div class="container-fluid">
           <div class="row">
@@ -26,17 +23,11 @@
                           <div class="col-md-12 mr-auto text-left">
                             <div class="custom-search input-group">
                               <div class="custom-breadcrumb">
-                                <ol
-                                  class="breadcrumb no-bg-color d-inline-block p-0 m-0 mb-2"
-                                >
+                                <ol class="breadcrumb no-bg-color d-inline-block p-0 m-0 mb-2">
                                   <li class="breadcrumb-item d-inline-block">
-                                    <a href="dashboard.php" class="text-dark"
-                                      >Home</a
-                                    >
+                                    <a href="dashboard.php" class="text-dark">Home</a>
                                   </li>
-                                  <li
-                                    class="breadcrumb-item d-inline-block active"
-                                  >
+                                  <li class="breadcrumb-item d-inline-block active">
                                     Profile
                                   </li>
                                 </ol>
@@ -61,141 +52,232 @@
                       <h4 class="card-title mb-0">Profile</h4>
                     </div>
                     <div class="card-body">
-  @if (isLoading) {
-    <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p class="mt-2">Loading employee data...</p>
-    </div>
-  }
+                      @if (isLoading) {
+                        <div class="text-center py-4">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <p class="mt-2">Loading employee data...</p>
+                        </div>
+                      }
 
-  @if (error) {
-    <div class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
-  } @else if (!isLoading && employees.length > 0) {
-    <form
-      [formGroup]="employeeForm"
-      (ngSubmit)="updateEmployeeProfile()"
-      enctype="multipart/form-data"
-    >
-      <div class="col-12 mb-4">
-        <div class="avatar-upload">
-          <div class="avatar-edit">
-            <label for="imageUpload"><i class="fas fa-camera"></i></label>
-          </div>
-          <div class="avatar-preview">
-            <img
-              [src]="
-                // selectedEmployee?.image ||
-                'assets/images/default-avatar.png'
-              "
-              alt="Profile Image"
-            />
-          </div>
-        </div>
-      </div>
+                      @if (error) {
+                        <div class="alert alert-danger" role="alert">
+                          {{ error }}
+                        </div>
+                      } @else if (!isLoading && selectedEmployee) {
+                        <form
+                          [formGroup]="employeeForm"
+                          (ngSubmit)="updateEmployeeProfile()"
+                          enctype="multipart/form-data"
+                        >
+                          <div class="col-12 mb-4">
+                            <div class="avatar-upload">
+                              <div class="avatar-edit">
+                                <input 
+                                  type="file" 
+                                  id="imageUpload" 
+                                  (change)="onImageUpload($event)"
+                                  accept=".png, .jpg, .jpeg"
+                                  hidden
+                                />
+                                <label for="imageUpload" class="avatar-edit-label">
+                                  <i class="fas fa-camera"></i>
+                                </label>
+                              </div>
+                              <div class="avatar-preview">
+                                <img
+                                  [src]="getProfileImage()"
+                                  alt="Profile Image"
+                                  class="avatar-preview-image"
+                                />
+                                @if (isImageLoading) {
+                                  <div class="image-loading-overlay">
+                                    <div class="spinner-border spinner-border-sm text-white" role="status">
+                                      <span class="visually-hidden">Loading image...</span>
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                            @if (imageError) {
+                              <div class="alert alert-warning mt-2" role="alert">
+                                {{ imageError }}
+                              </div>
+                            }
+                          </div>
 
-      <div class="row">
-        <div class="col-sm-6 mb-3">
-          <div class="form-group">
-            <label class="form-label">Name</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="lastName"
-            />
-          </div>
-        </div>
+                          <div class="row">
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  formControlName="firstName"
+                                  [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched"
+                                />
+                                @if (employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched) {
+                                  <div class="invalid-feedback">
+                                    First name is required
+                                  </div>
+                                }
+                              </div>
+                            </div>
 
-        <div class="col-sm-6 mb-3">
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedEmployee?.email"
-              readonly
-            />
-          </div>
-        </div>
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  formControlName="lastName"
+                                  [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched"
+                                />
+                                @if (employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched) {
+                                  <div class="invalid-feedback">
+                                    Last name is required
+                                  </div>
+                                }
+                              </div>
+                            </div>
 
-        <div class="col-sm-6 mb-3">
-          <div class="form-group">
-            <label class="form-label">Gender</label>
-            <select class="form-control" formControlName="gender">
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  [value]="selectedEmployee.email"
+                                  readonly
+                                />
+                              </div>
+                            </div>
 
-        <div class="col-sm-6 mb-3">
-          <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="phone"
-              placeholder="Enter phone number"
-            />
-          </div>
-        </div>
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select 
+                                  class="form-control" 
+                                  formControlName="gender"
+                                  [class.is-invalid]="employeeForm.get('gender')?.invalid && employeeForm.get('gender')?.touched"
+                                >
+                                  <option value="">Select Gender</option>
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                                  <option value="Other">Other</option>
+                                </select>
+                              </div>
+                            </div>
 
-        <div class="col-sm-6 mb-3">
-          <div class="form-group">
-            <label class="form-label">Employee ID</label>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedEmployee?.empid"
-              readonly
-            />
-          </div>
-        </div>
-      </div>
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  formControlName="phone"
+                                  placeholder="Enter phone number"
+                                  [class.is-invalid]="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched"
+                                />
+                                @if (employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched) {
+                                  <div class="invalid-feedback">
+                                    Please enter a valid phone number (10-15 digits only)
+                                  </div>
+                                }
+                              </div>
+                            </div>
 
-      <div class="row">
-        <div class="col-sm-12 mb-3">
-          <div class="form-group">
-            <label class="form-label">Address</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="address"
-              placeholder="Enter address"
-            />
-          </div>
-        </div>
-      </div>
+                            <div class="col-sm-6 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Employee ID</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  [value]="selectedEmployee.empid"
+                                  readonly
+                                />
+                              </div>
+                            </div>
+                          </div>
 
-      <div class="text-center mt-4">
-        <button
-          type="submit"
-          class="btn btn-primary me-2"
-          [disabled]="isLoading || employeeForm.invalid"
-        >
-          @if (isLoading) {
-            <span class="spinner-border spinner-border-sm me-1"></span>
-          }
-          {{ isLoading ? "Updating..." : "Update Details" }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="resetForm()"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  } @else {
-    <p>No employee data found. Please search for an employee.</p>
-  }
-</div>
+                          <div class="row">
+                            <div class="col-sm-12 mb-3">
+                              <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <textarea
+                                  class="form-control"
+                                  formControlName="address"
+                                  placeholder="Enter address"
+                                  rows="3"
+                                ></textarea>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Debug information -->
+                          @if (showDebug) {
+                            <div class="row mt-4">
+                              <div class="col-12">
+                                <div class="card bg-light">
+                                  <div class="card-body">
+                                    <h6>Debug Information:</h6>
+                                    <p><strong>Form Values:</strong> {{ employeeForm.value | json }}</p>
+                                    <p><strong>Original Data:</strong> {{ originalFormData | json }}</p>
+                                    <p><strong>Changed Fields:</strong> {{ getChangedFields() | json }}</p>
+                                    <p><strong>Form Dirty:</strong> {{ employeeForm.dirty }}</p>
+                                    <p><strong>Form Valid:</strong> {{ employeeForm.valid }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
+
+                          <div class="text-center mt-4">
+                            <button
+                              type="submit"
+                              class="btn btn-primary me-2"
+                              [disabled]="isLoading || employeeForm.invalid || !employeeForm.dirty"
+                            >
+                              @if (isLoading) {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                              }
+                              {{ isLoading ? "Updating..." : "Update Details" }}
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-secondary me-2"
+                              (click)="resetForm()"
+                              [disabled]="isLoading"
+                            >
+                              Reset
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary me-2"
+                              (click)="generateDummyImage()"
+                              [disabled]="isLoading"
+                            >
+                              Generate Dummy Image
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-info btn-sm"
+                              (click)="showDebug = !showDebug"
+                            >
+                              {{ showDebug ? 'Hide Debug' : 'Show Debug' }}
+                            </button>
+                          </div>
+                        </form>
+                      } @else if (!isLoading && !selectedEmployee) {
+                        <div class="text-center py-4">
+                          <p class="text-muted">No employee data found.</p>
+                          <button class="btn btn-primary" (click)="goBack()">
+                            Back to Employees
+                          </button>
+                        </div>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
@@ -203,14 +285,11 @@
           </div>
         </div>
       </div>
-
       <!--/Content-->
     </div>
     <!-- Inner Wrapper -->
 
     <div class="sidebar-overlay" id="sidebar_overlay"></div>
-
-    <!-- jQuery -->
 
     <app-footer></app-footer>
   </body>

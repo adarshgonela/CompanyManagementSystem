@@ -36,8 +36,7 @@ public class Employee {
     @NotBlank(message = "Department is required")
 
     private String department;
-    @NotBlank(message = "position is required")
-
+    @NotNull(message = "position is required")
     private String position;
     private LocalDate hireDate;
     @NotBlank(message = "Gender is required")

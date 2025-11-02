@@ -1,4 +1,5 @@
 export interface Employee {
+  image: null;
   id: number;
   empid:number;
   firstName: string;

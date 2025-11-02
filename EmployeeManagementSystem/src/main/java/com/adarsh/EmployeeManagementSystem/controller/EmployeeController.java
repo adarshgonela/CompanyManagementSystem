@@ -115,6 +115,7 @@ public class EmployeeController {
 
     @PutMapping("/change-profile/{id}")
     public Optional<Employee> changeprofile(@RequestBody Employee employee, @PathVariable Long id) {
+      System.out.println(employee.toString());
         return employeeService.changeGender(employee, id);
     }
 }
