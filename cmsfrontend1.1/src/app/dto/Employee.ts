@@ -1,5 +1,5 @@
 export interface Employee {
-  image: null;
+  // image: null;
   id: number;
   empid:number;
   firstName: string;
@@ -12,4 +12,5 @@ export interface Employee {
   roletype: string; // 'employee' | 'hr' | 'manager'
   gender: string;
   address: string;
+  image: string | null;
 }

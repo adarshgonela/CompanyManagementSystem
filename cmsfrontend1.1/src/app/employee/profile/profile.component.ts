@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
-import { CommonModule } from '@angular/common';
 
+// Components
 import { NavbarComponent } from "../../common/navbar/navbar.component";
 import { SidebarComponent } from "../../common/sidebar/sidebar.component";
 import { FooterComponent } from "../../common/footer/footer.component";
 import { HeaderComponent } from "../../common/header/header.component";
+
+// Services & Models
 import { Employee } from '../../dto/Employee';
 import { EmpdetailsService } from '../../service/employee/empdetails.service';
 
@@ -26,152 +30,130 @@ import { EmpdetailsService } from '../../service/employee/empdetails.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
-  employees: Employee[] = [];
+  // Dependencies (Angular 18 style)
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private employeeService = inject(EmpdetailsService);
+  private destroyRef = inject(DestroyRef);
+
+  // State
+  employees: Employee[] = []; // Kept for compatibility if needed
+  selectedEmployee: Employee | null = null;
+  employeeForm!: FormGroup;
+  
+  // UI State
   isLoading = false;
   isImageLoading = false;
   error: string | null = null;
   imageError: string | null = null;
-  employeeId: number | null = null;
-  selectedEmployee: Employee | null = null;
-  employeeForm!: FormGroup;
-  originalFormData: any = {};
-  uploadedImage: File | null = null;
-  currentImageUrl: string | null = null;
   showDebug = false;
 
-  // Dummy image service URLs
+  // Image Handling
+  currentImageUrl: string | null = null;
+  uploadedFile: File | null = null;
+
   private readonly dummyImageServices = [
     'https://i.pravatar.cc/300?img=',
-    'https://i.pravatar.cc/300?u=',
-    'https://robohash.org/',
-    'https://api.dicebear.com/6.x/avataaars/svg?seed=',
-    'https://api.dicebear.com/6.x/personas/svg?seed='
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=',
+    'https://robohash.org/'
   ];
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private employeeService: EmpdetailsService,
-    private fb: FormBuilder
-  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadEmployeeFromUrl();
   }
 
-  initializeForm(): void {
+  private initializeForm(): void {
     this.employeeForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
+      // Note: If email/empid are disabled in UI, use getRawValue() on submit
+      email: [''], 
+      empid: [''],
       gender: [''],
       phone: ['', [Validators.pattern('^[0-9]{10,15}$')]],
       address: ['']
     });
   }
 
-  loadEmployeeFromUrl(): void {
-    this.isLoading = true;
-    this.error = null;
-
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        const employeeId = Number(id);
-        if (isNaN(employeeId)) {
-          this.error = 'Invalid employee ID';
-          this.isLoading = false;
-          return;
+  private loadEmployeeFromUrl(): void {
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        const id = params.get('id');
+        if (id) {
+          this.getEmployeeById(Number(id));
+        } else {
+          this.error = 'No employee ID provided';
         }
-        this.getEmployeeById(employeeId);
-      } else {
-        this.error = 'No employee ID provided';
-        this.isLoading = false;
-      }
-    });
+      });
   }
 
   getEmployeeById(id: number): void {
     this.isLoading = true;
     this.error = null;
 
-    this.employeeService.getEmployeeById(id).subscribe({
-      next: (data: Employee) => {
-        this.selectedEmployee = data;
-        this.employees = [data];
-        
-        // Populate form with employee data
-        this.populateForm(data);
-        
-        // Store original form data for comparison
-        this.originalFormData = { ...this.employeeForm.value };
-        
-        // Set initial image
-        if (this.selectedEmployee.image) {
-          this.currentImageUrl = this.selectedEmployee.image;
+    this.employeeService.getEmployeeById(id)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (data: Employee) => {
+          this.selectedEmployee = data;
+          this.employees = [data]; // optional, depends on your sidebar reqs
+          this.currentImageUrl = data.image || null;
+          this.populateForm(data);
+        },
+        error: (err) => {
+          this.error = 'Failed to load employee details.';
+          console.error(err);
         }
-        
-        this.isLoading = false;
-        console.log('Employee loaded:', data);
-        console.log('Form initialized with:', this.employeeForm.value);
-      },
-      error: (error: any) => {
-        this.error = 'Employee not found';
-        this.isLoading = false;
-        console.error('Error fetching employee:', error);
-      }
-    });
+      });
   }
 
   populateForm(employee: Employee): void {
     this.employeeForm.patchValue({
-      firstName: employee.firstName || '',
-      lastName: employee.lastName || '',
-      gender: employee.gender || '',
-      phone: employee.phone || '',
-      address: employee.address || ''
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      email: employee.email,
+      empid: employee.empid,
+      gender: employee.gender,
+      phone: employee.phone,
+      address: employee.address
     });
+    
+    // Mark as pristine so the "Update" button is disabled initially
+    this.employeeForm.markAsPristine(); 
   }
+
+  // --- Image Handling ---
 
   getProfileImage(): string {
-    if (this.currentImageUrl) {
-      return this.currentImageUrl;
-    }
-    return this.selectedEmployee?.image || 'assets/images/default-avatar.png';
+    return this.currentImageUrl || this.selectedEmployee?.image || 'assets/images/default-avatar.png';
   }
 
-  onImageUpload(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-      if (!validTypes.includes(file.type)) {
-        this.imageError = 'Please select a valid image file (JPEG, JPG, PNG)';
+  onImageUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Validation
+      if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+        this.imageError = 'Only PNG and JPG allowed.';
         return;
       }
-
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        this.imageError = 'Image size should be less than 5MB';
+        this.imageError = 'File size must be less than 5MB.';
         return;
       }
 
-      this.isImageLoading = true;
+      this.uploadedFile = file;
       this.imageError = null;
-      this.uploadedImage = file;
 
-      // Create preview URL
+      // Preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.currentImageUrl = e.target.result;
-        this.isImageLoading = false;
-        
-        // Mark form as dirty since image changed
-        this.employeeForm.markAsDirty();
-      };
-      reader.onerror = () => {
-        this.imageError = 'Failed to load image';
-        this.isImageLoading = false;
+        this.employeeForm.markAsDirty(); // Enable update button
       };
       reader.readAsDataURL(file);
     }
@@ -179,155 +161,86 @@ export class ProfileComponent implements OnInit {
 
   generateDummyImage(): void {
     this.isImageLoading = true;
-    this.imageError = null;
-    
-    // Select random service
+    const seed = Math.random().toString(36).substring(7);
     const serviceIndex = Math.floor(Math.random() * this.dummyImageServices.length);
-    const baseUrl = this.dummyImageServices[serviceIndex];
-    
-    // Generate unique seed based on employee data or random
-    const seed = this.selectedEmployee?.id 
-      ? `${this.selectedEmployee.id}-${Date.now()}`
-      : `employee-${Math.random().toString(36).substr(2, 9)}`;
-    
-    const dummyImageUrl = `${baseUrl}${seed}`;
-    
-    // Create image element to test if URL is valid
+    const url = `${this.dummyImageServices[serviceIndex]}${seed}`;
+
+    // Preload to ensure validity
     const img = new Image();
+    img.src = url;
     img.onload = () => {
-      this.currentImageUrl = dummyImageUrl;
+      this.currentImageUrl = url;
       this.isImageLoading = false;
       this.employeeForm.markAsDirty();
-      console.log('Dummy image generated:', dummyImageUrl);
     };
     img.onerror = () => {
-      // If one service fails, try another
-      this.fallbackDummyImage();
+      this.isImageLoading = false;
+      this.imageError = "Could not generate dummy image.";
     };
-    img.src = dummyImageUrl;
   }
 
-  private fallbackDummyImage(): void {
-    // Use a reliable fallback service
-    const fallbackUrl = `https://i.pravatar.cc/300?img=${Math.floor(Math.random() * 70) + 1}`;
-    
-    const img = new Image();
-    img.onload = () => {
-      this.currentImageUrl = fallbackUrl;
-      this.isImageLoading = false;
-      this.employeeForm.markAsDirty();
-    };
-    img.onerror = () => {
-      this.imageError = 'Failed to generate dummy image';
-      this.isImageLoading = false;
-    };
-    img.src = fallbackUrl;
-  }
+  // --- Update Logic ---
 
   updateEmployeeProfile(): void {
-    if (this.employeeForm.invalid || !this.selectedEmployee) {
-      console.error('Form is invalid or no employee selected');
-      return;
-    }
-
-    // Get only the changed fields
-    const changedData = this.getChangedFields();
-    
-    // Include image URL if it was changed
-    if (this.currentImageUrl && this.currentImageUrl !== this.selectedEmployee.image) {
-      changedData.image = this.currentImageUrl;
-    }
-    
-    // If no fields have changed, don't make the API call
-    if (Object.keys(changedData).length === 0) {
-      console.log('No changes detected');
-      this.error = 'No changes to update';
-      setTimeout(() => {
-        this.error = null;
-      }, 3000);
-      return;
-    }
+    if (this.employeeForm.invalid || !this.selectedEmployee) return;
 
     this.isLoading = true;
     this.error = null;
 
-    console.log('Sending update with changed data:', changedData);
+    // 1. Prepare the payload
+    // use getRawValue() to include disabled fields (like email/id)
+    const formValues = this.employeeForm.getRawValue();
 
-    this.employeeService.changeEmployeeProfile(this.selectedEmployee.id, changedData)
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
+    // 2. Merge existing data with form data to ensure a COMPLETE object is sent
+    const updatedEmployee: Employee = {
+      ...this.selectedEmployee, // Original data
+      ...formValues,            // Overwrite with form changes
+    };
+
+    // 3. Handle Image Logic
+    // If a Base64 string is generated (via dummy or preview), attach it.
+    // NOTE: If your backend expects a specific 'file' object, logic changes here.
+    if (this.currentImageUrl) {
+        updatedEmployee.image = this.currentImageUrl;
+    }
+
+    // 4. Send Request
+    this.employeeService.changeEmployeeProfile(this.selectedEmployee.id, updatedEmployee)
+      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
-        next: (updatedEmployee: Employee) => {
-          this.selectedEmployee = updatedEmployee;
-          this.employees = [updatedEmployee];
+        next: (response: Employee) => {
+          this.selectedEmployee = response;
+          this.populateForm(response); // Reset form state to pristine
+          this.uploadedFile = null;
           
-          // Update the original form data with the new values
-          this.originalFormData = { ...this.employeeForm.value };
-          
-          // Update image reference
-          if (updatedEmployee.image) {
-            this.currentImageUrl = updatedEmployee.image;
-          }
-          
-          console.log('Employee profile updated successfully:', updatedEmployee);
-          
-          // Show success message
-          this.error = 'Profile updated successfully!';
-          setTimeout(() => {
-            this.error = null;
-          }, 3000);
+          // Simple success feedback
+          alert('Profile Updated Successfully!');
         },
-        error: (error: any) => {
-          this.error = 'Failed to update employee profile';
-          console.error('Error updating employee:', error);
+        error: (err) => {
+          console.error('Update failed', err);
+          this.error = 'Failed to update profile. Please try again.';
         }
       });
   }
 
-  public getChangedFields(): any {
-    const currentFormData = this.employeeForm.value;
-    const changedFields: any = {};
-
-    Object.keys(currentFormData).forEach(key => {
-      const currentValue = currentFormData[key];
-      const originalValue = this.originalFormData[key];
-      
-      // Handle null/undefined comparison and string trimming for consistency
-      const currentVal = typeof currentValue === 'string' ? currentValue.trim() : currentValue;
-      const originalVal = typeof originalValue === 'string' ? originalValue.trim() : originalValue;
-      
-      if (currentVal !== originalVal) {
-        changedFields[key] = currentValue; // Use original value (not trimmed) for API
+  // Helper helper for debugging in template
+  getChangedFields(): any {
+    const controls = this.employeeForm.controls;
+    const changes: any = {};
+    for (const name in controls) {
+      if (controls[name].dirty) {
+        changes[name] = controls[name].value;
       }
-    });
-
-    console.log('Changed fields detected:', changedFields);
-    return changedFields;
+    }
+    return changes;
   }
 
   resetForm(): void {
     if (this.selectedEmployee) {
-      // Reset to original employee data
       this.populateForm(this.selectedEmployee);
       this.currentImageUrl = this.selectedEmployee.image || null;
-      this.uploadedImage = null;
       this.imageError = null;
-      this.error = null;
-      this.employeeForm.markAsPristine();
-      
-      // Update original form data
-      this.originalFormData = { ...this.employeeForm.value };
-    } else {
-      this.employeeForm.reset();
-      this.selectedEmployee = null;
-      this.currentImageUrl = null;
-      this.error = null;
     }
-  }
-
-  loadEmployee(id: number): void {
-    this.getEmployeeById(id);
   }
 
   goBack(): void {

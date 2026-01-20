@@ -18,11 +18,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectServiceTest {
 
-    
     @Mock
     private Projectdao projectdao;
 
@@ -30,84 +30,153 @@ public class ProjectServiceTest {
     private ProjectService projectService;
 
     private Project mockProject;
+    private static final Long PROJECT_ID = 1L;
+    private static final Long EMPLOYEE_ID = 101L;
+    private static final String PROJECT_NAME = "AI Platform";
 
     @BeforeEach
     void setUp() {
         mockProject = new Project();
-        mockProject.setId(1L);
-        mockProject.setName("AI Platform");
+        mockProject.setId(PROJECT_ID);
+        mockProject.setName(PROJECT_NAME);
         mockProject.setDescription("Build GPT App");
         mockProject.setStatus(ProjectStatus.IN_PROGRESS);
     }
 
     @Test
-    void testCreateProject_WhenNotExists_ShouldCreate() {
-        when(projectdao.getdatabyprojectname("AI Platform")).thenReturn(List.of());
+    void testCreateProject_WhenNotExists_ShouldCreateSuccessfully() {
+        // Arrange
+        when(projectdao.getdatabyprojectname(PROJECT_NAME)).thenReturn(Collections.emptyList());
         when(projectdao.createproject(mockProject)).thenReturn(mockProject);
 
+        // Act
         Project created = projectService.createproject(mockProject);
 
+        // Assert
         assertNotNull(created);
-        assertEquals("AI Platform", created.getName());
+        assertEquals(PROJECT_NAME, created.getName());
+        assertEquals(ProjectStatus.IN_PROGRESS, created.getStatus());
+        verify(projectdao, times(1)).getdatabyprojectname(PROJECT_NAME);
         verify(projectdao, times(1)).createproject(mockProject);
     }
 
     @Test
-    void testCreateProject_WhenExists_ShouldThrowException() {
-        when(projectdao.getdatabyprojectname("AI Platform")).thenReturn(List.of(mockProject));
+    void testCreateProject_WhenExists_ShouldThrowProjectNotFoundException() {
+        // Arrange
+        when(projectdao.getdatabyprojectname(PROJECT_NAME)).thenReturn(List.of(mockProject));
 
-        Exception ex = assertThrows(ProjectNotFoundException.class, () -> {
-            projectService.createproject(mockProject);
-        });
+        // Act & Assert
+        ProjectNotFoundException exception = assertThrows(ProjectNotFoundException.class, 
+            () -> projectService.createproject(mockProject));
 
-        assertEquals("the project you are entering is already present", ex.getMessage());
-        verify(projectdao, never()).createproject(mockProject);
+        assertEquals("the project you are entering is already present", exception.getMessage());
+        verify(projectdao, times(1)).getdatabyprojectname(PROJECT_NAME);
+        verify(projectdao, never()).createproject(any(Project.class));
     }
 
     @Test
-    void testGetAllProjects() {
-        when(projectdao.getAllProjects()).thenReturn(List.of(mockProject));
+    void testGetAllProjects_WhenProjectsExist_ShouldReturnProjectList() {
+        // Arrange
+        List<Project> expectedProjects = List.of(mockProject);
+        when(projectdao.getAllProjects()).thenReturn(expectedProjects);
 
+        // Act
         List<Project> result = projectService.getAllProjects();
 
+        // Assert
+        assertNotNull(result);
         assertEquals(1, result.size());
+        assertEquals(mockProject, result.get(0));
         verify(projectdao, times(1)).getAllProjects();
     }
 
     @Test
-    void testGetProjectById() {
-        when(projectdao.getProjectById(1L)).thenReturn(mockProject);
+    void testGetAllProjects_WhenNoProjects_ShouldReturnEmptyList() {
+        // Arrange
+        when(projectdao.getAllProjects()).thenReturn(Collections.emptyList());
 
-        Project result = projectService.getProjectById(1L);
+        // Act
+        List<Project> result = projectService.getAllProjects();
 
+        // Assert
         assertNotNull(result);
-        assertEquals("AI Platform", result.getName());
+        assertTrue(result.isEmpty());
+        verify(projectdao, times(1)).getAllProjects();
     }
 
     @Test
-    void testUpdateProject() {
+    void testGetProjectById_WhenProjectExists_ShouldReturnProject() {
+        // Arrange
+        when(projectdao.getProjectById(PROJECT_ID)).thenReturn(mockProject);
+
+        // Act
+        Project result = projectService.getProjectById(PROJECT_ID);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(PROJECT_NAME, result.getName());
+        assertEquals(PROJECT_ID, result.getId());
+        verify(projectdao, times(1)).getProjectById(PROJECT_ID);
+    }
+
+    @Test
+    void testGetProjectById_WhenProjectNotExists_ShouldReturnNull() {
+        // Arrange
+        when(projectdao.getProjectById(PROJECT_ID)).thenReturn(null);
+
+        // Act
+        Project result = projectService.getProjectById(PROJECT_ID);
+
+        // Assert
+        assertNull(result);
+        verify(projectdao, times(1)).getProjectById(PROJECT_ID);
+    }
+
+    @Test
+    void testUpdateProject_ShouldReturnUpdatedProject() {
+        // Arrange
         Project updatedProject = new Project();
-        updatedProject.setId(1L);
+        updatedProject.setId(PROJECT_ID);
         updatedProject.setName("AI Updated");
         updatedProject.setDescription("Updated Description");
         updatedProject.setStatus(ProjectStatus.COMPLETED);
 
-        when(projectdao.updateProject(1L, updatedProject)).thenReturn(updatedProject);
+        when(projectdao.updateProject(PROJECT_ID, updatedProject)).thenReturn(updatedProject);
 
-        Project result = projectService.updateProject(1L, updatedProject);
+        // Act
+        Project result = projectService.updateProject(PROJECT_ID, updatedProject);
 
+        // Assert
+        assertNotNull(result);
         assertEquals("AI Updated", result.getName());
+        assertEquals("Updated Description", result.getDescription());
         assertEquals(ProjectStatus.COMPLETED, result.getStatus());
+        verify(projectdao, times(1)).updateProject(PROJECT_ID, updatedProject);
     }
 
     @Test
-    void testAddEmployeeToProject() {
-        when(projectdao.addEmployeeToProject(1L, 101L)).thenReturn(mockProject);
+    void testAddEmployeeToProject_ShouldReturnProject() {
+        // Arrange
+        when(projectdao.addEmployeeToProject(PROJECT_ID, EMPLOYEE_ID)).thenReturn(mockProject);
 
-        Project result = projectService.addEmployeeToProject(1L, 101L);
+        // Act
+        Project result = projectService.addEmployeeToProject(PROJECT_ID, EMPLOYEE_ID);
 
+        // Assert
         assertNotNull(result);
-        verify(projectdao).addEmployeeToProject(1L, 101L);
+        assertEquals(mockProject, result);
+        verify(projectdao, times(1)).addEmployeeToProject(PROJECT_ID, EMPLOYEE_ID);
     }
 
+    @Test
+    void testDeleteProject_ShouldCallDaoMethod() {
+        // Arrange
+        doNothing().when(projectdao).deleteProject(PROJECT_ID);
+
+        // Act
+        projectService.deleteProject(PROJECT_ID);
+
+        // Assert
+        verify(projectdao, times(1)).deleteProject(PROJECT_ID);
+    }
 }
