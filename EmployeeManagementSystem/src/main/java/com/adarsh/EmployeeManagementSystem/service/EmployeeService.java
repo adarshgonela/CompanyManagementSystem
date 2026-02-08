@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 @Service
 
-public class EmployeeService {
+public class EmployeeService implements EmployeeServiceInter {
 
    
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
@@ -117,4 +117,6 @@ public class EmployeeService {
 public Optional<Employee> changeGender(Employee e,Long id){
     return dao.changeGender(e, id);
 }
+
+
 }
