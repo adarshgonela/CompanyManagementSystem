@@ -118,5 +118,17 @@ public Optional<Employee> changeGender(Employee e,Long id){
     return dao.changeGender(e, id);
 }
 
+@Override
+public List<Employee> findByDepartment(String department,Long lastId,int pageSize) {
+    return dao.findByDepartment(department,lastId,pageSize);
+}
+
+@Override
+public List<Employee> findByEmployeePosition(String position, Long lastId, int pageSize) {
+return dao.findByEmployeePosition(position, lastId, pageSize);
+}
+
+
+
 
 }

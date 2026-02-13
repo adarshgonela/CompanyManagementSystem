@@ -19,5 +19,7 @@ List<Employee> getEmployees(int pageNumber, int pageSize);
 ResponseEntity<String> uploadImage( MultipartFile file) throws IOException;
 Employee getImage( String imageName) throws IOException;
  Optional<Employee> changeGender(Employee e,Long id);
+ List<Employee> findByDepartment(String department,Long lastId,int pageSize);
+ List<Employee> findByEmployeePosition(String position,Long lastId,int pageSize);
 
 }

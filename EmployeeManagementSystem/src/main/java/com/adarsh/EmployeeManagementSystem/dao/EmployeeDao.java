@@ -161,6 +161,28 @@ public Optional<Employee> changeGender(Employee e,Long id){
         return outputStream.toByteArray();
     }
 
+    public List<Employee> findByEmployeePosition(String position,Long lastId,int pageSize) {
+         Pageable pageable = PageRequest.of(0, pageSize); // only page size matters for keyset pagination
 
+        List<Employee> employees = employeeRepository.findEmployeeByPosition(position, lastId, pageable);
+
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException("No employees found with position: " + position);
+        }
+
+        return employees;
+    }
+    public List<Employee> findByDepartment(String department,Long lastId,int pageSize)
+    {
+         Pageable pageable = PageRequest.of(0, pageSize); // only page size matters for keyset pagination
+
+        List<Employee> employees = employeeRepository.findEmployeeByDepartment(department, lastId, pageable);
+
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException("No employees found with department: " + department);
+        }
+
+        return employees;
+    }
 
 }
