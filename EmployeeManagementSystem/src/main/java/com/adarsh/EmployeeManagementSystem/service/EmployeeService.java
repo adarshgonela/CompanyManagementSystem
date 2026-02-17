@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @Service
 
 public class EmployeeService implements EmployeeServiceInter {
 
-   
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
     private static final String CACHE_NAME = "employees";
 
@@ -76,20 +76,23 @@ public class EmployeeService implements EmployeeServiceInter {
         return true;
     }
 
-    @Cacheable(value = CACHE_NAME, key = "'allEmployees'")
-    public List<Employee> getAllEmployee() {
-        List<Employee> employees = dao.getAllEmployee();
+   @Cacheable(
+    value = "allemployees",
+    key = "'allEmployees-page-' + #pageNumber + '-size-' + #pageSize"
+)
+    public List<Employee> getAllEmployee(int pageSize,int pageNumber) {
+        List<Employee> employees = dao.getAllEmployee(pageSize,pageNumber);
 
         if (employees.isEmpty()) {
             logger.info("No employees found.");
         } else {
-            logger.info("All employees retrieved. Count: {}", employees.size());
-        }
-
+             logger.info("Employees retrieved. Page: {}, Size: {}, Count: {}",
+                pageNumber, pageSize, employees.size());
+     }
         return employees;
     }
 
-    @Cacheable(value = CACHE_NAME, key = "'employeesPage_' + #pageNumber + '_' + #pageSize")
+    @Cacheable(value = "getemployees", key = "'employeesPage_' + #pageNumber + '_' + #pageSize")
     public List<Employee> getEmployees(int pageNumber, int pageSize) {
         List<Employee> employees = dao.getEmployees(pageNumber, pageSize);
 
@@ -102,32 +105,36 @@ public class EmployeeService implements EmployeeServiceInter {
         return employees;
     }
 
-    // public ResponseEntity<String> uploadProfilePic( Long id, MultipartFile file) throws IOException {
-    //     return dao.uploadProfilePic(id, file);}
+    // public ResponseEntity<String> uploadProfilePic( Long id, MultipartFile file)
+    // throws IOException {
+    // return dao.uploadProfilePic(id, file);}
     // public ResponseEntity<byte[]> getProfilePic( Long id) {
-    //     return dao.getProfilePic(id);
+    // return dao.getProfilePic(id);
     // }
 
-    public ResponseEntity<String> uploadImage( MultipartFile file) throws IOException {
-    return dao.uploadImage(file);
+    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
+        return dao.uploadImage(file);
     }
-    public Employee getImage( String imageName) throws IOException {
+
+    public Employee getImage(String imageName) throws IOException {
         return dao.getImage(imageName);
     }
-public Optional<Employee> changeGender(Employee e,Long id){
-    return dao.changeGender(e, id);
-}
 
-@Override
-public List<Employee> findByDepartment(String department,Long lastId,int pageSize) {
-    return dao.findByDepartment(department,lastId,pageSize);
-}
+    public Optional<Employee> changeGender(Employee e, Long id) {
+        return dao.changeGender(e, id);
+    }
 
-@Override
-public List<Employee> findByEmployeePosition(String position, Long lastId, int pageSize) {
-return dao.findByEmployeePosition(position, lastId, pageSize);
-}
+    @Cacheable(value = "employeesByDepartment", 
+               key = "#department + '-' + #lastId + '-' + #pageSize")
+    public List<Employee> findByDepartment(String department, Long lastId, int pageSize) {
+        return dao.findByDepartment(department, lastId, pageSize);
+    }
 
+  @Cacheable(value = "employeesByPosition", 
+               key = "#position + '-' + #lastId + '-' + #pageSize")
+    public List<Employee> findByEmployeePosition(String position, Long lastId, int pageSize) {
+        return dao.findByEmployeePosition(position, lastId, pageSize);
+    }
 
 
 

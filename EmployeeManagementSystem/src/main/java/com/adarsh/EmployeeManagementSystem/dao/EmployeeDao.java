@@ -69,9 +69,10 @@ public class EmployeeDao {
         logger.info("Employee with ID {} deleted", id);
     }
 
-    public List<Employee> getAllEmployee() {
+    public List<Employee> getAllEmployee(int pageSize,int pageNumber) {
+        Pageable pageable=PageRequest.of(pageNumber,pageSize);
         logger.debug("Fetching all employees");
-        return employeeRepository.findAll();
+        return employeeRepository.findAll(pageable).getContent();
     }
 
     public List<Employee> getEmployees(int pageNumber, int pageSize) {

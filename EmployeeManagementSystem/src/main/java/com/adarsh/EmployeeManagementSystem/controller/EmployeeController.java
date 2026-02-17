@@ -39,8 +39,8 @@ public class EmployeeController {
     // }
 
     @GetMapping("/all")
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = employeeService.getAllEmployee();
+    public List<Employee> getAllEmployees(int pageSize,int pageNumber) {
+        List<Employee> employees = employeeService.getAllEmployee(pageSize,pageNumber);
         if (employees.isEmpty()) {
             return Collections.emptyList();
         }

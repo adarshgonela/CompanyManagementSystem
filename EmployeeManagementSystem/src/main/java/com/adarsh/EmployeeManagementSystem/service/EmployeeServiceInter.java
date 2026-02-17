@@ -14,7 +14,7 @@ Optional<Employee> getEmployeeById(Long id);
 Employee createEmployee(Employee employee);
 Employee updateEmployee(Employee employee, Long empid);
 boolean deleteEmployee(Long id);
- List<Employee> getAllEmployee();
+ List<Employee> getAllEmployee(int pageSize,int pageNumber);
 List<Employee> getEmployees(int pageNumber, int pageSize);
 ResponseEntity<String> uploadImage( MultipartFile file) throws IOException;
 Employee getImage( String imageName) throws IOException;
