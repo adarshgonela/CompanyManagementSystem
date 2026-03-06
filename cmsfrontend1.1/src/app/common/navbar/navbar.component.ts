@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FooterComponent } from '../../common/footer/footer.component';
 import { HeaderComponent } from '../../common/header/header.component';
+import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -24,7 +25,8 @@ export class NavbarComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private employeeService: EmpdetailsService
+    private employeeService: EmpdetailsService,
+    private authService:AuthService
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +86,9 @@ export class NavbarComponent {
   // Navigate back to employee list
   goBack(): void {
     this.router.navigate(['/employees']);
+  }
+  logout(): void{
+    this.authService.logout();
   }
 
 }

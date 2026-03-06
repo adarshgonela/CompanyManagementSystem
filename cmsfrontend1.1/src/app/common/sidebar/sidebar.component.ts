@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FooterComponent } from '../../common/footer/footer.component';
 import { HeaderComponent } from '../../common/header/header.component';
+import { response } from 'express';
 
 @Component({
   selector: 'app-sidebar',
@@ -32,6 +33,7 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     this.loadEmployeeFromUrl();
+    const userId = Number(sessionStorage.getItem('user-id'));//testing
   }
 
   ////////////////////////////////////////////////////////////////

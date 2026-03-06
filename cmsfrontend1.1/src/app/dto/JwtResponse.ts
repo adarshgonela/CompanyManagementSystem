@@ -1,6 +1,6 @@
 export interface JwtResponse {
     token: string;
-  type: string;
+  type: "Bearer";
   id: number;
   username: string;
   email: string;

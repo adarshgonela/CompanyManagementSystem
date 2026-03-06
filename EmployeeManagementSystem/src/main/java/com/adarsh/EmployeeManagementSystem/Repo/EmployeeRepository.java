@@ -13,20 +13,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("""
-       SELECT e FROM Employee e
-       WHERE e.position LIKE CONCAT('%',:position,'%')
-       AND e.id > :lastId
-       ORDER BY e.id ASC
-       """)
-           List<Employee> findEmployeeByPosition(@Param("position")String position,@Param("lastId")Long lastId,Pageable pageable);
+            SELECT e FROM Employee e
+            WHERE e.position LIKE CONCAT('%',:position,'%')
+            AND e.id > :lastId
+            ORDER BY e.id ASC
+            """)
+    List<Employee> findEmployeeByPosition(@Param("position") String position, @Param("lastId") Long lastId,
+            Pageable pageable);
 
- @Query("""
-       SELECT e FROM Employee e
-       WHERE e.department LIKE CONCAT('%',:department,'%')
-       AND e.id > :lastId
-       ORDER BY e.id ASC
-       """)
-           List<Employee> findEmployeeByDepartment(@Param("department")String department,@Param("lastId")Long lastId,Pageable pageable);
+    @Query("""
+            SELECT e FROM Employee e
+            WHERE e.department LIKE CONCAT('%',:department,'%')
+            AND e.id > :lastId
+            ORDER BY e.id ASC
+            """)
+    List<Employee> findEmployeeByDepartment(@Param("department") String department, @Param("lastId") Long lastId,
+            Pageable pageable);
 
-
-        }
+}
