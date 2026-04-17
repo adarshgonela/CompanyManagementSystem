@@ -3,6 +3,9 @@ package com.adarsh.EmployeeManagementSystem.controller;
 import com.adarsh.EmployeeManagementSystem.dto.Employee;
 import com.adarsh.EmployeeManagementSystem.service.EmployeeService;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200") // Enable CORS for this controller
+// @CrossOrigin(origins = "http://localhost:4200") // Enable CORS for this controller
 @RequestMapping("/api/employees")
+@Slf4j
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -22,13 +26,18 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    // ✅ Get Employee by ID
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+        log.info("Fetching employee with id: {}", id);
+
         return employeeService.getEmployeeById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> {
+                    log.warn("Employee not found with id: {}", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
-
     // @GetMapping("/all")
     // public ResponseEntity<List<Employee>> getAllEmployees() {
     // List<Employee> employees = employeeService.getAllEmployee();
@@ -38,38 +47,51 @@ public class EmployeeController {
     // return ResponseEntity.ok(employees);
     // }
 
-    @GetMapping("/all")
-    public List<Employee> getAllEmployees(int pageSize,int pageNumber) {
-        List<Employee> employees = employeeService.getAllEmployee(pageSize,pageNumber);
+    @GetMapping
+    public List<Employee> getAllEmployees(int pageSize, int pageNumber) {
+        List<Employee> employees = employeeService.getAllEmployee(pageSize, pageNumber);
         if (employees.isEmpty()) {
             return Collections.emptyList();
         }
         return employees;
     }
 
+    // ✅ Create Employee
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee created = employeeService.createEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
+        log.info("Creating employee: {}", employee);
+
+        Employee createdEmployee = employeeService.createEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
-        Employee updated = employeeService.updateEmployee(employee, id);
-        if (updated == null) {
+    public ResponseEntity<Employee> updateEmployee(
+            @PathVariable Long id,
+            @Valid @RequestBody Employee employee) {
+
+        log.info("Updating employee with id: {}", id);
+
+        Employee updatedEmployee = employeeService.updateEmployee(employee, id);
+        if (updatedEmployee != null) {
+            return ResponseEntity.ok(updatedEmployee);
+        } else {
+            log.warn("Employee not found for update: {}", id);
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updated);
     }
 
+    // ✅ Delete Employee
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        boolean deleted = employeeService.deleteEmployee(id);
-        if (deleted) {
+        log.info("Deleting employee with id: {}", id);
+
+        if (employeeService.deleteEmployee(id)) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+
+        log.warn("Employee not found for deletion: {}", id);
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
@@ -123,9 +145,16 @@ public class EmployeeController {
         return employeeService.findByEmployeePosition(position, lastId, pageSize);
     }
 
-      @GetMapping("/department/{department}")
-    public List<Employee> findByDepartmentEmployees(@PathVariable String department,
-            @RequestParam(defaultValue = "0") Long lastId, int pageSize) {
-        return employeeService.findByDepartment(department, lastId, pageSize);
+    // ✅ Filter by Department (Cursor Pagination)
+    @GetMapping("/department/{department}")
+    public ResponseEntity<?> findByDepartment(
+            @PathVariable String department,
+            @RequestParam(defaultValue = "0") Long lastId,
+            @RequestParam(defaultValue = "10") int size) {
+
+        log.info("Fetching employees by department: {}", department);
+
+        return ResponseEntity.ok(
+                employeeService.findByDepartment(department, lastId, size));
     }
 }

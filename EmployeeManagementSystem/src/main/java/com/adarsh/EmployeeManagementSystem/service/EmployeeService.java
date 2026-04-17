@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,22 +77,20 @@ public class EmployeeService implements EmployeeServiceInter {
         return true;
     }
 
-   @Cacheable(
-    value = "allemployees",
-    key = "'allEmployees-page-' + #pageNumber + '-size-' + #pageSize"
-)
-    public List<Employee> getAllEmployee(int pageSize,int pageNumber) {
-        List<Employee> employees = dao.getAllEmployee(pageSize,pageNumber);
+    @Cacheable(value = "allemployees", key = "'allEmployees-page-' + #pageNumber + '-size-' + #pageSize")
+    public List<Employee> getAllEmployee(int pageSize, int pageNumber) {
+        List<Employee> employees = dao.getAllEmployee(pageSize, pageNumber);
 
         if (employees.isEmpty()) {
             logger.info("No employees found.");
         } else {
-             logger.info("Employees retrieved. Page: {}, Size: {}, Count: {}",
-                pageNumber, pageSize, employees.size());
-     }
+            logger.info("Employees retrieved. Page: {}, Size: {}, Count: {}",
+                    pageNumber, pageSize, employees.size());
+        }
         return employees;
     }
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "getemployees", key = "'employeesPage_' + #pageNumber + '_' + #pageSize")
     public List<Employee> getEmployees(int pageNumber, int pageSize) {
         List<Employee> employees = dao.getEmployees(pageNumber, pageSize);
@@ -124,18 +123,14 @@ public class EmployeeService implements EmployeeServiceInter {
         return dao.changeGender(e, id);
     }
 
-    @Cacheable(value = "employeesByDepartment", 
-               key = "#department + '-' + #lastId + '-' + #pageSize")
+    @Cacheable(value = "employeesByDepartment", key = "#department + '-' + #lastId + '-' + #pageSize")
     public List<Employee> findByDepartment(String department, Long lastId, int pageSize) {
         return dao.findByDepartment(department, lastId, pageSize);
     }
 
-  @Cacheable(value = "employeesByPosition", 
-               key = "#position + '-' + #lastId + '-' + #pageSize")
+    @Cacheable(value = "employeesByPosition", key = "#position + '-' + #lastId + '-' + #pageSize")
     public List<Employee> findByEmployeePosition(String position, Long lastId, int pageSize) {
         return dao.findByEmployeePosition(position, lastId, pageSize);
     }
-
-
 
 }
