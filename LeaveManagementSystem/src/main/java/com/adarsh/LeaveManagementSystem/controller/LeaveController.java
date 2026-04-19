@@ -1,149 +1,132 @@
 package com.adarsh.LeaveManagementSystem.controller;
 
-import com.adarsh.LeaveManagementSystem.ExceptionHandlers.LeaveRequestNotFoundException;
-import com.adarsh.LeaveManagementSystem.Feign.EmployeeFeignController;
 import com.adarsh.LeaveManagementSystem.dto.LeaveRequest;
-import com.adarsh.LeaveManagementSystem.dto.LeaveType;
 import com.adarsh.LeaveManagementSystem.refDto.Employee;
 import com.adarsh.LeaveManagementSystem.service.LeaveService;
+import com.adarsh.LeaveManagementSystem.Feign.EmployeeFeignController;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/leave")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/leaves")
+@CrossOrigin(origins = "*") // configure properly in prod
 public class LeaveController {
 
-    @Autowired
-    private EmployeeFeignController employeeFeignController;
+    private static final Logger logger = LoggerFactory.getLogger(LeaveController.class);
 
-    @Autowired
-    private LeaveService service;
+    private final LeaveService service;
+    private final EmployeeFeignController employeeFeign;
 
-    @Autowired
-    private LeaveTypeController leaveTypeController;
+    public LeaveController(LeaveService service,
+                           EmployeeFeignController employeeFeign) {
+        this.service = service;
+        this.employeeFeign = employeeFeign;
+    }
 
-    @PostMapping("/save")
-    public LeaveRequest requestleaveOrsaveleave(@RequestBody LeaveRequest leaverequest) {
-        // Validate employee exists
-        Optional<Employee> optional = employeeFeignController.getEmployeeByIdpost(leaverequest.getEmployeeid());
-        if (!optional.isPresent()) {
-            throw new RuntimeException("Employee not found");
+    // CREATE LEAVE REQUEST
+    @PostMapping
+    public ResponseEntity<LeaveRequest> createLeave(@Valid @RequestBody LeaveRequest request) {
+
+        validateEmployee(request.getEmployeeid());
+
+        LeaveRequest saved = service.saveLeave(request);
+
+        logger.info("Leave created for employee ID: {}", request.getEmployeeid());
+
+        return ResponseEntity.ok(saved);
+    }
+
+    // UPDATE LEAVE
+    @PutMapping("/{id}")
+    public ResponseEntity<LeaveRequest> updateLeave(
+            @PathVariable Long id,
+            @Valid @RequestBody LeaveRequest request) {
+
+        request.setLeaveRequestId(id);
+
+        LeaveRequest updated = service.updateLeave(request);
+
+        return ResponseEntity.ok(updated);
+    }
+
+    // GET ALL
+    @GetMapping
+    public ResponseEntity<List<LeaveRequest>> getAllLeaves() {
+
+        List<LeaveRequest> leaves = service.getAllLeaves();
+
+        if (leaves.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
 
-        // Validate leave type is not null
-        if (leaverequest.getLeaveType() == null) {
-            throw new RuntimeException("Leave type must be specified");
-        }
-
-        // Get current leave balances
-        LeaveType lt = leaveTypeController.getleavetypebyempid(leaverequest.getEmployeeid())
-                .orElseThrow(() -> new RuntimeException("Leave balances not found for employee"));
-
-        int days = leaverequest.getNumberOfDays();
-        String leaveType = leaverequest.getLeaveType();
-
-        // Check and deduct leave balance
-        switch (leaveType.toLowerCase()) {
-            case "vacationcount":
-                if (lt.getVacationCount() < days) {
-                    throw new RuntimeException("Not enough vacation days remaining");
-                }
-                lt.setVacationCount(lt.getVacationCount() - days);
-                break;
-            case "sickleavecount":
-                if (lt.getSickLeaveCount() < days) {
-                    throw new RuntimeException("Not enough sick leave days remaining");
-                }
-                lt.setSickLeaveCount(lt.getSickLeaveCount() - days);
-                break;
-            case "remoteworkcount":
-                if (lt.getRemoteWorkCount() < days) {
-                    throw new RuntimeException("Not enough remote work days remaining");
-                }
-                lt.setRemoteWorkCount(lt.getRemoteWorkCount() - days);
-                break;
-            case "personalcount":
-                if (lt.getPersonalCount() < days) {
-                    throw new RuntimeException("Not enough personal days remaining");
-                }
-                lt.setPersonalCount(lt.getPersonalCount() - days);
-                break;
-            case "paidcount":
-                if (lt.getPaidCount() < days) {
-                    throw new RuntimeException("Not enough paid days remaining");
-                }
-                lt.setPaidCount(lt.getPaidCount() - days);
-                break;
-            default:
-                throw new RuntimeException("Invalid leave type specified");
-        }
-
-        // Update the leave type record
-        leaveTypeController.updateLeaveType(leaverequest.getEmployeeid(), lt);
-
-        // Process the leave request
-        return service.requestleaveOrsaveleave(leaverequest);
+        return ResponseEntity.ok(leaves);
     }
 
-    @PutMapping("/update")
-    public LeaveRequest updateleave(@RequestBody LeaveRequest leaverequest) {
-        try {
-            return service.updateleave(leaverequest);
-        } catch (LeaveRequestNotFoundException ex) {
-            throw new LeaveRequestNotFoundException("Leave request not found for update: " + ex.getMessage());
-        } catch (Exception ex) {
-            throw new RuntimeException("An error occurred while updating the leave request: " + ex.getMessage());
-        }
+    // GET BY EMPLOYEE
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<LeaveRequest> getByEmployee(@PathVariable Long employeeId) {
+
+        return service.findByEmployee(employeeId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/all")
-    public List<LeaveRequest> getallemployees() {
-        return service.getallleave();
+    // UPDATE STATUS
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<LeaveRequest> updateStatus(
+            @PathVariable Long id,
+            @RequestBody LeaveRequest request) {
+
+        LeaveRequest updated = service.updateStatus(id, request);
+
+        return ResponseEntity.ok(updated);
     }
 
-    @GetMapping("/leaveid/{employeeId}")
-    public Optional<LeaveRequest> findByEmployee(@PathVariable Long employeeId) {
-        return service.findByEmployee(employeeId);
-    }
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLeave(@PathVariable Long id) {
 
-    @GetMapping("/test")
-    public Optional<Employee> findByEmployee1() {
-        Optional<Employee> o = employeeFeignController.getEmployeeByIdpost(7L);
-        System.out.println(o.get());
-        return Optional.of(o.get());
-    }
-
-    @PatchMapping("/update-status/{id}")
-    public LeaveRequest updatestatus(@PathVariable Long id, @RequestBody LeaveRequest leaveRequest) {
-        return service.updatestatus(id, leaveRequest);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public void deleteLeave(@PathVariable Long id) {
         service.deleteLeave(id);
-    }
-@GetMapping("/leavespagination")
-public ResponseEntity<List<LeaveRequest>> getLeaves(
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "2") int size) {
 
-    if (page < 1 || size < 1) {
-        return ResponseEntity.badRequest().build();
-    }
-
-    List<LeaveRequest> leaves = service.getPaginatedLeaves(page, size);
-
-    if (leaves.isEmpty()) {
         return ResponseEntity.noContent().build();
     }
 
-    return ResponseEntity.ok(leaves);
-}
+    // PAGINATION
+    @GetMapping("/page")
+    public ResponseEntity<List<LeaveRequest>> getLeaves(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
+        if (page < 0 || size <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<LeaveRequest> leaves = service.getPaginatedLeaves(page, size);
+
+        if (leaves.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(leaves);
+    }
+
+    // =========================
+    // HELPER METHODS
+    // =========================
+
+    private void validateEmployee(Long employeeId) {
+
+        Employee employee = employeeFeign
+                .getEmployeeByIdpost(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+
+        logger.info("Validated employee: {}", employee.getId());
+    }
 }

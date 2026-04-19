@@ -27,17 +27,17 @@ public class EmployeeController {
     }
 
     // ✅ Get Employee by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        log.info("Fetching employee with id: {}", id);
+   @GetMapping("/{id}")
+public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+    log.info("Fetching employee with id: {}", id);
 
-        return employeeService.getEmployeeById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    log.warn("Employee not found with id: {}", id);
-                    return ResponseEntity.notFound().build();
-                });
-    }
+    return employeeService.getEmployeeById(id)
+            .map(employee -> ResponseEntity.ok(employee))
+            .orElseGet(() -> {
+                log.warn("Employee not found with id: {}", id);
+                return ResponseEntity.notFound().build();
+            });
+}
     // @GetMapping("/all")
     // public ResponseEntity<List<Employee>> getAllEmployees() {
     // List<Employee> employees = employeeService.getAllEmployee();
@@ -94,7 +94,7 @@ public class EmployeeController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping
+    @GetMapping("/page")
     public ResponseEntity<List<Employee>> getPaginatedEmployees(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
