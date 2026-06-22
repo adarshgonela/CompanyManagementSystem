@@ -1,8 +1,6 @@
 package com.adarsh.springjwt.controllers;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,15 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adarsh.springjwt.clientResponses.EmsDtoClient;
-import com.adarsh.springjwt.clientResponses.Leavetypedtoclient;
 import com.adarsh.springjwt.clients.Ems_lms_client;
-import com.adarsh.springjwt.models.Role;
-import com.adarsh.springjwt.models.User;
 import com.adarsh.springjwt.payload.request.LoginRequest;
-import com.adarsh.springjwt.payload.request.SignupRequest;
 import com.adarsh.springjwt.payload.response.JwtResponse;
-import com.adarsh.springjwt.payload.response.MessageResponse;
 import com.adarsh.springjwt.payload.response.SessionResponse;
 import com.adarsh.springjwt.repository.RoleRepository;
 import com.adarsh.springjwt.repository.UserRepository;
@@ -106,63 +98,65 @@ System.out.println("heyyyy i am signed in method from springboot");
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        // Check if username is already taken
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
+    // @PostMapping("/signup")
+    // public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    //     // Check if username is already taken
+    //     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    //         return ResponseEntity
+    //                 .badRequest()
+    //                 .body(new MessageResponse("Error: Username is already taken!"));
+    //     }
 
-        // Check if email is already in use
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
+    //     // Check if email is already in use
+    //     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    //         return ResponseEntity
+    //                 .badRequest()
+    //                 .body(new MessageResponse("Error: Email is already in use!"));
+    //     }
 
-        // Ensure roles are provided
-        if (signUpRequest.getRole() == null || signUpRequest.getRole().isEmpty()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: At least one role ID must be specified"));
-        }
+    //     // Ensure roles are provided
+    //     if (signUpRequest.getRole() == null || signUpRequest.getRole().isEmpty()) {
+    //         return ResponseEntity
+    //                 .badRequest()
+    //                 .body(new MessageResponse("Error: At least one role ID must be specified"));
+    //     }
 
-        // Create new user
-        User user = new User(
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+    //     // Create new user
+    //     User user = new User(
+    //             signUpRequest.getUsername(),
+    //             signUpRequest.getEmail(),
+    //             encoder.encode(signUpRequest.getPassword()));
 
-        // Fetch roles using role IDs
-        Set<Role> roles = new HashSet<>();
-        for (Long roleId : signUpRequest.getRole()) {
-            Role role = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new RuntimeException("Error: Role with ID " + roleId + " not found."));
-            roles.add(role);
-        }
+    //     // Fetch roles using role IDs
+    //     Set<Role> roles = new HashSet<>();
+    //     for (Long roleId : signUpRequest.getRole()) {
+    //         // Ensure roleId is not null to satisfy non-null contract of repository
+    //         Objects.requireNonNull(roleId, "Error: Role ID must not be null");
+    //         Role role = roleRepository.findById(roleId)
+    //             .orElseThrow(() -> new RuntimeException("Error: Role with ID " + roleId + " not found."));
+    //         roles.add(role);
+    //     }
 
-        user.setRoles(roles);
-        userRepository.save(user);
+    //     user.setRoles(roles);
+    //     userRepository.save(user);
 
-        // Save user ID in external EMS + LMS services
-        EmsDtoClient emsDtoClient = new EmsDtoClient();
-        emsDtoClient.setEmpid(user.getId());
-        ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
+    //     // Save user ID in external EMS + LMS services
+    //     EmsDtoClient emsDtoClient = new EmsDtoClient();
+    //     emsDtoClient.setEmpid(user.getId());
+    //     ResponseEntity<String> response = ems_lms_client.createemployee(emsDtoClient);
 
-        Leavetypedtoclient leaveTypeDtoClient = new Leavetypedtoclient();
-        leaveTypeDtoClient.setEmpid(user.getId());
-        ResponseEntity<String> response1 = ems_lms_client.createleaverowafterregister(leaveTypeDtoClient);
+    //     Leavetypedtoclient leaveTypeDtoClient = new Leavetypedtoclient();
+    //     leaveTypeDtoClient.setEmpid(user.getId());
+    //     ResponseEntity<String> response1 = ems_lms_client.createleaverowafterregister(leaveTypeDtoClient);
 
-        if (response.getStatusCode().is2xxSuccessful() && response1.getStatusCode().is2xxSuccessful()) {
-            return ResponseEntity
-                    .ok(new MessageResponse("User registered successfully! Employee can enter remaining data now."));
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new MessageResponse("Error: User registered but failed to save in another system."));
-        }
-    }
+    //     if (response.getStatusCode().is2xxSuccessful() && response1.getStatusCode().is2xxSuccessful()) {
+    //         return ResponseEntity
+    //                 .ok(new MessageResponse("User registered successfully! Employee can enter remaining data now."));
+    //     } else {
+    //         return ResponseEntity
+    //                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body(new MessageResponse("Error: User registered but failed to save in another system."));
+    //     }
+    // }
 
 }
