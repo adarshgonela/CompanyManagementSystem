@@ -23,7 +23,7 @@ public class Ems_lms_client {
     }
 
     @PostMapping("/employee/save")
-    public ResponseEntity<EmsDtoClient> createEmployee(EmsDtoClient emsDtoClient) {
+    public ResponseEntity<EmsDtoClient> createEmployee(@RequestBody EmsDtoClient emsDtoClient) {
         return emsClient.createEmployee(emsDtoClient);
     }
 

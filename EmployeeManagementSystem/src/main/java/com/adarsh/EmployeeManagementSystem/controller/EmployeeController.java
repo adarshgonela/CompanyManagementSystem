@@ -58,7 +58,7 @@ public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
 
     // ✅ Create Employee
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
+    public ResponseEntity<Employee> createEmployee( @RequestBody Employee employee) {
         log.info("Creating employee: {}", employee);
 
         Employee createdEmployee = employeeService.createEmployee(employee);
